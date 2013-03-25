@@ -125,10 +125,23 @@ void DebugDrawEdge(b2EdgeShape *edge, SDL_Surface *screen)
 	Vec2 vec1 = Scaleb2Vec2(edge->m_vertex1);
 	Vec2 vec2 = Scaleb2Vec2(edge->m_vertex2);
 
+	const bool steep = (fabs(vec2.y - vec1.y) > fabs(vec2.x - vec1.x));
+	if (steep)
+	{
+		std::swap(vec1.x, vec1.y);
+		std::swap(vec2.x, vec2.y);
+	}
+
+	if (vec1.x > vec2.x)
+	{
+		std::swap(vec1.x, vec2.x);
+		std::swap(vec1.y, vec2.y);
+	}
+
 	Uint32 colour = ColourWhite(screen);
 
-	int dx = vec1.x - vec2.x;
-	int dy = vec1.y - vec2.y;
+	int dx = vec2.x - vec1.x;
+	int dy = vec2.y - vec1.y;
 
 	int D = 2*dy - dx;
 

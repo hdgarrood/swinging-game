@@ -14,6 +14,19 @@ const int32 POSITION_ITERATIONS         = 2;
 const int32 VELOCITY_ITERATIONS         = 6;
 const float PPM                         = 10.0f;
 
+struct Vec2
+{
+	int x;
+	int y;
+};
+
+// apply scaling to a b2Vec2
+Vec2 Scaleb2Vec2(b2Vec2 vec)
+{
+	Vec2 retval = {(int)floor(vec.x * PPM), (int)floor(vec.y * PPM)};
+	return retval;
+}
+
 SDL_Surface *load_image(std::string filename)
 {
     SDL_Surface *loadedImage = NULL;
@@ -98,14 +111,44 @@ void DebugDrawCircle(b2CircleShape *circle, SDL_Surface *screen)
 
 }
 
-void DebugDrawPolygon(b2PolygonShape *circle, SDL_Surface *screen)
+void DebugDrawPolygon(b2PolygonShape *polygon, SDL_Surface *screen)
 {
+	// TODO write this properly
 
 }
 
+// lifted from:
+// http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm#Algorithm_with_Integer_Arithmetic
 void DebugDrawEdge(b2EdgeShape *edge, SDL_Surface *screen)
 {
+	debug("printing an edge");
+	Vec2 vec1 = Scaleb2Vec2(edge->m_vertex1);
+	Vec2 vec2 = Scaleb2Vec2(edge->m_vertex2);
 
+	Uint32 colour = ColourWhite(screen);
+
+	int dx = vec1.x - vec2.x;
+	int dy = vec1.y - vec2.y;
+
+	int D = 2*dy - dx;
+
+	PutPixel(screen, vec1.x, vec1.y, colour);
+	int y = vec1.y;
+
+	for (int x = vec1.x + 1; x != vec2.x; x++)
+	{
+		if (D > 0)
+		{
+			y++;
+			PutPixel(screen, x, y, colour);
+			D += ((2 * dy) - (2 * dx));
+		}
+		else
+		{
+			PutPixel(screen, x, y, colour);
+			D += 2 * dy;
+		}
+	}
 }
 
 void DebugDrawBody(b2Body *body, SDL_Surface *screen)
@@ -116,18 +159,18 @@ void DebugDrawBody(b2Body *body, SDL_Surface *screen)
     {
         switch (fixture->GetType())
         {
-            case (b2Shape::e_circle):
-            {
-                b2CircleShape *circle = (b2CircleShape*)fixture->GetShape();
-                DebugDrawCircle(circle, screen);
-                break;
-            }
-            case b2Shape::e_polygon:
-            {
-                b2PolygonShape *polygon = (b2PolygonShape*)fixture->GetShape();
-                DebugDrawPolygon(polygon, screen);
-                break;
-            }
+            /* case (b2Shape::e_circle): */
+            /* { */
+            /*     b2CircleShape *circle = (b2CircleShape*)fixture->GetShape(); */
+            /*     DebugDrawCircle(circle, screen); */
+            /*     break; */
+            /* } */
+            /* case b2Shape::e_polygon: */
+            /* { */
+            /*     b2PolygonShape *polygon = (b2PolygonShape*)fixture->GetShape(); */
+            /*     DebugDrawPolygon(polygon, screen); */
+            /*     break; */
+            /* } */
             case b2Shape::e_edge:
             {
                 b2EdgeShape *edge = (b2EdgeShape*)fixture->GetShape();
@@ -154,10 +197,9 @@ void DebugDrawWorld(b2World *world, SDL_Surface *screen)
     debug("got the world's body list");
     while (body != NULL)
     {
-        if (body->GetType() == b2_dynamicBody) {
-            debug("about to draw a body");
-            DebugDrawBody(body, screen);
-        }
+		debug("about to draw a body");
+		DebugDrawBody(body, screen);
+		debug("drawn a body");
         body = body->GetNext();
     }
 

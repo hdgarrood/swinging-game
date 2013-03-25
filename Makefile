@@ -18,4 +18,4 @@ main: $(OBJS)
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o main
+	rm -f $(OBJDIR)/*.o main

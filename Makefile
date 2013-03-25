@@ -9,13 +9,15 @@ SRCS    = $(wildcard $(SRCDIR)/*.cpp)
 _OBJS   = $(SRCS:src%=obj%)
 OBJS    = $(_OBJS:%.cpp=%.o)
 
+EXEC    = bin/swinging-game
+
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-main: $(OBJS)
+$(EXEC): $(OBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
 
 clean:
-	rm -f $(OBJDIR)/*.o main
+	rm -f $(OBJS) $(EXEC)

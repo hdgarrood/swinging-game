@@ -1,0 +1,5 @@
+apt:
+libsdl1.2-dev
+libsdl-image1.2-dev
+
+Box2D v2.2.1 (from source)

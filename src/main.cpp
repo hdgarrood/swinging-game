@@ -80,17 +80,17 @@ b2World CreateWorld()
     groundShape.Set(groundLeft, groundRight);
     groundBody->CreateFixture(&groundShape, 0.0f);
 
-    // create a box
-    b2BodyDef boxBodyDef;
-    boxBodyDef.type = b2_dynamicBody;
-    boxBodyDef.position.Set(1.0f, 1.0f);
-    boxBodyDef.type = b2_dynamicBody;
+    // create a circle
+    b2BodyDef circleBodyDef;
+    circleBodyDef.type = b2_dynamicBody;
+    circleBodyDef.position.Set(1.0f, 1.0f);
+    circleBodyDef.type = b2_dynamicBody;
 
-    b2Body *boxBody = m_world.CreateBody(&boxBodyDef);
+    b2Body *circleBody = m_world.CreateBody(&circleBodyDef);
 
-    b2PolygonShape boxShape;
-    boxShape.SetAsBox(1.0f, 1.0f);
-    boxBody->CreateFixture(&boxShape, 1.0f);
+    b2CircleShape circleShape;
+    circleShape.m_radius = 1.0f;
+    circleBody->CreateFixture(&circleShape, 1.0f);
 
     return m_world;
 }
@@ -106,9 +106,11 @@ void PutPixel(SDL_Surface *surface, int x, int y, Uint32 colour)
     pixels[(surface->w * y) + x] = colour;
 }
 
-void DebugDrawCircle(b2CircleShape *circle, SDL_Surface *screen)
+void DebugDrawCircle(b2Body *body, b2CircleShape *circle, SDL_Surface *screen)
 {
+    Vec2 position = Scaleb2Vec2(body->GetPosition());
 
+    DebugDrawEdge
 }
 
 void DebugDrawPolygon(b2PolygonShape *polygon, SDL_Surface *screen)
@@ -172,12 +174,12 @@ void DebugDrawBody(b2Body *body, SDL_Surface *screen)
     {
         switch (fixture->GetType())
         {
-            /* case (b2Shape::e_circle): */
-            /* { */
-            /*     b2CircleShape *circle = (b2CircleShape*)fixture->GetShape(); */
-            /*     DebugDrawCircle(circle, screen); */
-            /*     break; */
-            /* } */
+            case (b2Shape::e_circle):
+            {
+                b2CircleShape *circle = (b2CircleShape*)fixture->GetShape();
+                DebugDrawCircle(body, circle, screen);
+                break;
+            }
             /* case b2Shape::e_polygon: */
             /* { */
             /*     b2PolygonShape *polygon = (b2PolygonShape*)fixture->GetShape(); */

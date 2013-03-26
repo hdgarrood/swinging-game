@@ -4,6 +4,13 @@
 
 #include "Drawing.h"
 
+// General-purpose drawing functions. These should only assume use of SDL;
+// Box2D should not be mentioned.
+//
+// All functions should take a DrawOptions as their first parameter.
+//
+// All functions take care of locking the surface for you.
+
 void SetPixel(DrawOptions opts, int x, int y)
 {
     if (SDL_MUSTLOCK(opts.surface))
@@ -61,6 +68,37 @@ void Draw_Line(DrawOptions opts, int x0, int y0, int x1, int y1)
     }
 }
 
-void Draw_Circle(DrawOptions opts, int x, int y, int radius)
+void Draw_Circle(DrawOptions opts, int x0, int y0, int radius)
 {
+    int f = 1 - radius;
+    int ddF_x = 1;
+    int ddF_y = -2 * radius;
+    int x = 0;
+    int y = radius;
+
+    SetPixel(opts, x0, y0 + radius);
+    SetPixel(opts, x0, y0 - radius);
+    SetPixel(opts, x0 + radius, y0);
+    SetPixel(opts, x0 - radius, y0);
+
+    while(x < y)
+    {
+        if (f >= 0)
+        {
+            y--;
+            ddF_y += 2;
+            f += ddF_y;
+        }
+        x++;
+        ddF_x += 2;
+        f += ddF_x;
+        SetPixel(opts, x0 + x, y0 + y);
+        SetPixel(opts, x0 - x, y0 + y);
+        SetPixel(opts, x0 + x, y0 - y);
+        SetPixel(opts, x0 - x, y0 - y);
+        SetPixel(opts, x0 + y, y0 + x);
+        SetPixel(opts, x0 - y, y0 + x);
+        SetPixel(opts, x0 + y, y0 - x);
+        SetPixel(opts, x0 - y, y0 - x);
+    }
 }

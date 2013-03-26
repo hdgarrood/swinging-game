@@ -17,7 +17,17 @@ void SetPixel(DrawOptions opts, int x, int y)
         SDL_LockSurface(opts.surface);
 
     Uint32 *pixels = (Uint32*)opts.surface->pixels;
-    pixels[(opts.surface->w * y) + x] = opts.colour;
+
+    int index = (opts.surface->w * y) + x;
+    int max = (opts.surface->w * opts.surface->h);
+    if (index < 0 || index >= max)
+    {
+        printf("tried to write to out-of-bounds pixel %d\n", index);
+    }
+    else
+    {
+        pixels[index] = opts.colour;
+    }
 
     if (SDL_MUSTLOCK(opts.surface))
         SDL_UnlockSurface(opts.surface);

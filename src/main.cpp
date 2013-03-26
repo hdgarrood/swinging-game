@@ -49,17 +49,18 @@ b2World CreateWorld()
     b2World m_world(gravity);
 
     // create the ground
-    b2BodyDef groundBodyDef;
-    groundBodyDef.type = b2_staticBody;
-    //groundBodyDef.position.Set(0.0f, 20.0f);
+    {
+        b2BodyDef bd;
+        bd.type = b2_staticBody;
 
-    b2Body *groundBody = m_world.CreateBody(&groundBodyDef);
+        b2Body *body = m_world.CreateBody(&bd);
 
-    b2Vec2 groundLeft(0.0f, 30.0f);
-    b2Vec2 groundRight(64.0f, 48.0f);
-    b2EdgeShape groundShape;
-    groundShape.Set(groundLeft, groundRight);
-    groundBody->CreateFixture(&groundShape, 0.0f);
+        b2Vec2 vec1(0.0f, 30.0f);
+        b2Vec2 vec2(64.0f, 35.0f);
+        b2EdgeShape shape;
+        shape.Set(vec1, vec2);
+        body->CreateFixture(&shape, 0.0f);
+    }
 
     // create a circle
     {

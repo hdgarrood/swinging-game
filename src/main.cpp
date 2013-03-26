@@ -97,7 +97,7 @@ int main(int argc, char *args[])
     b2World world = CreateWorld();
     SDL_DebugDraw debugDraw(screen, ColourWhite(screen));
 
-    world.SetDebugDraw((b2Draw*)&debugDraw);
+    world.SetDebugDraw(&debugDraw);
 
     for (int i=0; i<300; i++)
     {

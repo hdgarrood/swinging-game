@@ -14,16 +14,10 @@ const int32 POSITION_ITERATIONS         = 2;
 const int32 VELOCITY_ITERATIONS         = 6;
 const float PPM                         = 10.0f;
 
-struct Vec2
-{
-    int x;
-    int y;
-};
-
 // apply scaling to a b2Vec2
-Vec2 Scaleb2Vec2(b2Vec2 vec)
+b2Vec2 ScaleForDrawing(b2Vec2 vec)
 {
-    Vec2 retval = {(int)floor(vec.x * PPM), (int)floor(vec.y * PPM)};
+    b2Vec2 retval((int)floor(vec.x * PPM), (int)floor(vec.y * PPM));
     return retval;
 }
 
@@ -108,9 +102,6 @@ void PutPixel(SDL_Surface *surface, int x, int y, Uint32 colour)
 
 void DebugDrawCircle(b2Body *body, b2CircleShape *circle, SDL_Surface *screen)
 {
-    Vec2 position = Scaleb2Vec2(body->GetPosition());
-
-    DebugDrawEdge
 }
 
 void DebugDrawPolygon(b2PolygonShape *polygon, SDL_Surface *screen)
@@ -124,8 +115,8 @@ void DebugDrawPolygon(b2PolygonShape *polygon, SDL_Surface *screen)
 void DebugDrawEdge(b2EdgeShape *edge, SDL_Surface *screen)
 {
     debug("printing an edge");
-    Vec2 vec1 = Scaleb2Vec2(edge->m_vertex1);
-    Vec2 vec2 = Scaleb2Vec2(edge->m_vertex2);
+    b2Vec2 vec1 = ScaleForDrawing(edge->m_vertex1);
+    b2Vec2 vec2 = ScaleForDrawing(edge->m_vertex2);
 
     const bool steep = (fabs(vec2.y - vec1.y) > fabs(vec2.x - vec1.x));
     if (steep)

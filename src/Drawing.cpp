@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <math.h>
 #include <SDL/SDL.h>
 
 #include "Drawing.h"
@@ -42,20 +43,24 @@ void Draw_Line(DrawOptions opts, int x0, int y0, int x1, int y1)
     int D = 2*dy - dx;
     int y = y0;
 
-    SetPixel(x0, y0);
+    SetPixel(opts, x0, y0);
 
     for (int x = x0 + 1; x != x1; x++)
     {
         if (D > 0)
         {
             y++;
-            SetPixel(x, y);
+            SetPixel(opts, x, y);
             D += ((2 * dy) - (2 * dx));
         }
         else
         {
-            SetPixel(x, y);
+            SetPixel(opts, x, y);
             D += 2 * dy;
         }
     }
+}
+
+void Draw_Circle(DrawOptions opts, int x, int y, int radius)
+{
 }

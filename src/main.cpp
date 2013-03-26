@@ -62,15 +62,17 @@ b2World CreateWorld()
     groundBody->CreateFixture(&groundShape, 0.0f);
 
     // create a circle
-    b2BodyDef circleBodyDef;
-    circleBodyDef.type = b2_dynamicBody;
-    circleBodyDef.position.Set(1.0f, 1.0f);
+    {
+        b2BodyDef bd;
+        bd.type = b2_dynamicBody;
+        bd.position.Set(1.0f, 1.0f);
 
-    b2Body *circleBody = m_world.CreateBody(&circleBodyDef);
+        b2Body *body = m_world.CreateBody(&bd);
 
-    b2CircleShape circleShape;
-    circleShape.m_radius = 1.0f;
-    circleBody->CreateFixture(&circleShape, 1.0f);
+        b2CircleShape shape;
+        shape.m_radius = 1.0f;
+        body->CreateFixture(&shape, 1.0f);
+    }
 
     return m_world;
 }

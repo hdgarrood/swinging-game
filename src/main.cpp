@@ -65,7 +65,6 @@ b2World CreateWorld()
     b2BodyDef circleBodyDef;
     circleBodyDef.type = b2_dynamicBody;
     circleBodyDef.position.Set(1.0f, 1.0f);
-    circleBodyDef.type = b2_dynamicBody;
 
     b2Body *circleBody = m_world.CreateBody(&circleBodyDef);
 

@@ -5,6 +5,7 @@
 #include <SDL/SDL_image.h>
 #include <Box2D/Box2D.h>
 
+#include "Drawing.h"
 #include "SDL_DebugDraw.h"
 #include "Constants.h"
 
@@ -56,7 +57,7 @@ b2World CreateWorld()
         b2Body *body = m_world.CreateBody(&bd);
 
         b2Vec2 vec1(0.0f, 30.0f);
-        b2Vec2 vec2(64.0f, 35.0f);
+        b2Vec2 vec2(64.0f, 48.0f);
         b2EdgeShape shape;
         shape.Set(vec1, vec2);
         body->CreateFixture(&shape, 0.0f);

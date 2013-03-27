@@ -39,6 +39,8 @@ void SDL_DebugDraw::DrawCircle
 
 void SDL_DebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
 {
+    DrawCircle(center, radius, color);
+    DrawSegment(center, center + axis, color);
 }
 void SDL_DebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
 {

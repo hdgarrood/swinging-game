@@ -22,7 +22,8 @@ void SetPixel(DrawOptions opts, int x, int y)
     int max = (opts.surface->w * opts.surface->h);
     if (index < 0 || index >= max)
     {
-        printf("tried to write to out-of-bounds pixel %d\n", index);
+        printf("thwarted an attempt to write to out-of-bounds pixel %d\n",
+                index);
     }
     else
     {
@@ -41,12 +42,23 @@ void Draw_Rect(DrawOptions opts, int x, int y, int w, int h)
 
 // lifted from:
 // http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm#Algorithm_with_Integer_Arithmetic
-void Draw_Line(DrawOptions opts, int x0, int y0, int x1, int y1)
+void Draw_Line
+(DrawOptions opts, const int _x0, const int _y0, const int _x1, const int _y1)
 {
-    if (fabs(y1 - y0) > fabs(x1 - x0))
+    int x0, x1, y0, y1;
+    if (fabs(_y1 - _y0) > fabs(_x1 - _x0))
     {
-        std::swap(x0, y0);
-        std::swap(x1, y1);
+        x0 = _y0;
+        y0 = _x0;
+        x1 = _y1;
+        y1 = _x1;
+    }
+    else
+    {
+        x0 = _x0;
+        y0 = _y0;
+        x1 = _x1;
+        y1 = _y1;
     }
 
     if (x0 > x1)

@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <signal.h>
+#include <stdlib.h>
 
 #include <SDL/SDL.h>
 #include <chipmunk/chipmunk.h>
@@ -68,8 +70,22 @@ CreateSpace()
     return space;
 }
 
+void
+CatchSignalAndDie(int s)
+{
+    printf("Caught signal %d\n", s);
+    exit(1);
+}
+
 int main(int argc, char *argv[])
 {
+    /* die on SIGINT */
+    struct sigaction sigIntHandler;
+    sigIntHandler.sa_handler = CatchSignalAndDie;
+    sigemptyset(&sigIntHandler.sa_mask);
+    sigIntHandler.sa_flags = 0;
+    sigaction(SIGINT, &sigIntHandler, NULL);
+
     puts("About to SDL_Init");
     SDL_Init(SDL_INIT_EVERYTHING);
 

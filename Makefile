@@ -1,6 +1,6 @@
 CC=gcc
-LIBS=-lSDL -lchipmunk
-CFLAGS=-g -std=c99
+LIBS=-lSDL -lchipmunk -lm
+CFLAGS=-g -std=gnu99
 
 # put objects in their own directory
 SRCDIR  = src

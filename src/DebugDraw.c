@@ -1,4 +1,5 @@
 #include <SDL/SDL.h>
+#include <math.h>
 #include <chipmunk/chipmunk.h>
 
 #include "Drawing.h"
@@ -23,10 +24,12 @@ DrawCircleShape(DrawOptions opts, cpShape* shape, cpBody* body)
 {
     cpVect centre = cpvadd(cpBodyGetPos(body),
                            cpCircleShapeGetOffset(shape));
-    SDLDraw_Circle(opts,
-                   centre.x,
-                   centre.y,
-                   cpCircleShapeGetRadius(shape));
+    cpFloat radius = cpCircleShapeGetRadius(shape);
+    cpFloat angle = cpBodyGetAngle(body);
+    cpVect edgePoint = cpv(radius * cos(angle), radius * sin(angle));
+
+    SDLDraw_Circle(opts, centre.x, centre.y, radius);
+    SDLDraw_Line(opts, centre.x, centre.y, edgePoint.x, edgePoint.y);
 }
 
 static void

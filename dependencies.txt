@@ -1,5 +1,8 @@
-apt:
-libsdl1.2-dev
-libsdl-image1.2-dev
+cmake (for chipmunk)
 
-Box2D v2.2.1 (from source)
+SDL and SDL_image.
+On debian-based systems:
+    libsdl1.2-dev
+    libsdl-image1.2-dev
+
+chipmunk physics

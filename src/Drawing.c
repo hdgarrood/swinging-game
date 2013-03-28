@@ -85,10 +85,8 @@ SDLDraw_Line(const DrawOptions opts,
 
     SetPixel(opts, px, py);
 
-    printf("dxabs = %d, dyabs = %d\n", dxabs, dyabs);
     if (dxabs >= dyabs) /* the line is more horizontal than vertical */
     {
-        printf("took first path\n");
         for (int i = 0; i < dxabs; i++)
         {
             y += dyabs;
@@ -103,7 +101,6 @@ SDLDraw_Line(const DrawOptions opts,
     }
     else /* the line is more vertical than horizontal */
     {
-        printf("took second path\n");
         for (int i = 0; i < dyabs; i++)
         {
             x += dxabs;

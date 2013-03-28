@@ -77,7 +77,8 @@ CatchSignalAndDie(int s)
     exit(1);
 }
 
-int main(int argc, char *argv[])
+void
+SetupSignals()
 {
     /* die on SIGINT */
     struct sigaction sigIntHandler;
@@ -85,6 +86,11 @@ int main(int argc, char *argv[])
     sigemptyset(&sigIntHandler.sa_mask);
     sigIntHandler.sa_flags = 0;
     sigaction(SIGINT, &sigIntHandler, NULL);
+}
+
+int main(int argc, char *argv[])
+{
+    SetupSignals();
 
     puts("About to SDL_Init");
     SDL_Init(SDL_INIT_EVERYTHING);

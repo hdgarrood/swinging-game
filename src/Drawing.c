@@ -23,6 +23,14 @@ SetPixel(const DrawOptions opts,
          const int x,
          const int y)
 {
+    if (x >= opts.surface->w || x < 0 ||
+        y >= opts.surface->h || y < 0)
+    {
+        printf("thwarting an attempt to set pixel (%d, %d)\n",
+                x, y);
+        return;
+    }
+
     if (SDL_MUSTLOCK(opts.surface))
         SDL_LockSurface(opts.surface);
 
@@ -31,11 +39,7 @@ SetPixel(const DrawOptions opts,
     int index = (opts.surface->w * y) + x;
     int max = (opts.surface->w * opts.surface->h);
 
-    if (index < 0 || index >= max)
-        printf("thwarted an attempt to write to out-of-bounds pixel %d\n",
-                index);
-    else
-        pixels[index] = GetColourAsUint32(opts);
+    pixels[index] = GetColourAsUint32(opts);
 
     if (SDL_MUSTLOCK(opts.surface))
         SDL_UnlockSurface(opts.surface);

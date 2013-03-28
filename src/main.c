@@ -52,7 +52,7 @@ CreateSpace()
     cpSpaceAddShape(space, ground);
 
     // create the ball
-    cpFloat radius = 30;
+    cpFloat radius = 50;
     cpFloat mass = 10;
     cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
 

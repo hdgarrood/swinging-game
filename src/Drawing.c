@@ -67,42 +67,33 @@ SDLDraw_Line(const DrawOptions opts,
              const int x1,
              const int y1)
 {
-    /* if (fabs(_y1 - _y0) > fabs(_x1 - _x0)) */
-    /* { */
-    /*     x0 = _y0; */
-    /*     y0 = _x0; */
-    /*     x1 = _y1; */
-    /*     y1 = _x1; */
-    /* } */
-    /* else */
-    /* { */
-    /*     x0 = _x0; */
-    /*     y0 = _y0; */
-    /*     x1 = _x1; */
-    /*     y1 = _y1; */
-    /* } */
+    int initial_x,
+        final_x   = x1,
+        x_inc     = 1;
 
-    /* if (x0 > x1) */
-    /* { */
-    /*     int tmp; */
+    if (y1 < y0)
+    {
+        SDLDraw_Line(opts, x1, y1, x0, y0);
+        return;
+    }
+    else if (x1 < x0)
+    {
+        x_inc = -1;
+    }
 
-    /*     tmp = x0; */
-    /*     x0  = x1; */
-    /*     x1  = tmp; */
+    int dx = x_inc * (x1 - x0),
+        dy = y1 - y0,
+        D  = 2*dy - dx,
+        y  = y0;
 
-    /*     tmp = y0; */
-    /*     y0  = y1; */
-    /*     y1  = tmp; */
-    /* } */
-
-    int dx = x1 - x0;
-    int dy = y1 - y0;
-    int D = 2*dy - dx;
-    int y = y0;
+    initial_x = x0 + x_inc,
 
     SetPixel(opts, x0, y0);
 
-    for (int x = x0 + 1; x != x1; x++)
+    printf("init: %d, final: %d, inc: %d\n",
+            initial_x, final_x, x_inc);
+
+    for (int x = initial_x; x != final_x; x += x_inc)
     {
         if (D > 0)
         {

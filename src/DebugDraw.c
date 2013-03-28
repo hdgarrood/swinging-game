@@ -18,6 +18,30 @@ FillBackground(SDL_Surface* screen)
     SDLDraw_Rect(background_opts, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
+static void
+DrawCircleShape(DrawOptions opts, cpShape* shape, cpBody* body)
+{
+    cpVect centre = cpvadd(cpBodyGetPos(body),
+                           cpCircleShapeGetOffset(shape));
+    SDLDraw_Circle(opts,
+                   centre.x,
+                   centre.y,
+                   cpCircleShapeGetRadius(shape));
+}
+
+static void
+DrawSegmentShape(DrawOptions opts, cpShape* shape, cpBody* body)
+{
+    cpVect vect_a = cpSegmentShapeGetA(shape);
+    cpVect vect_b = cpSegmentShapeGetB(shape);
+
+    SDLDraw_Line(opts,
+                 vect_a.x,
+                 vect_a.y,
+                 vect_b.x,
+                 vect_b.y);
+}
+
 void
 DrawShape(cpShape* shape, SDL_Surface* screen)
 {
@@ -29,27 +53,13 @@ DrawShape(cpShape* shape, SDL_Surface* screen)
 	switch (shape->CP_PRIVATE(klass)->type)
 	{
 		case CP_CIRCLE_SHAPE:
-		{
-			cpVect centre = cpvadd(cpBodyGetPos(body),
-                                   cpCircleShapeGetOffset(shape));
-			SDLDraw_Circle(opts,
-                           centre.x,
-                           centre.y,
-                           cpCircleShapeGetRadius(shape));
+            DrawCircleShape(opts, shape, body);
             break;
-        }
         case CP_SEGMENT_SHAPE:
-        {
-            cpVect vect_a = cpSegmentShapeGetA(shape);
-            cpVect vect_b = cpSegmentShapeGetB(shape);
-            SDLDraw_Line(opts,
-                         vect_a.x,
-                         vect_a.y,
-                         vect_b.x,
-                         vect_b.y);
+            DrawSegmentShape(opts, shape, body);
             break;
-        }
-        default: break;
+        default:
+            break;
     }
 }
 

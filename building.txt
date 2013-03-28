@@ -1,0 +1,25 @@
+WINDOWS
+=======
+
+Requirements:
+
+CMake -- google, download, install, simples
+
+MinGW:
+    google, download, install. You don't need MSYS.
+    you might need to add C:\MinGW\bin to your system path and reboot.
+
+Chipmunk Physics:
+    download source
+    use CMake (Ensure to use MinGW makefiles)
+    Copy libchipmunk.dll and libchipmunk.a to c:\minGW\lib
+    Copy contents of include to c:\MinGW\include
+
+SDL:
+    just download headers + binaries
+    see lazyfoo.net if you get stuck
+
+UNICES
+======
+
+TODO

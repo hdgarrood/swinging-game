@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 
     cpFloat timeStep = 1.0 / 60.0;
 
-    for (cpFloat time=0; time < 5; time += timeStep)
+    for (cpFloat time=0; time < 3; time += timeStep)
     {
         puts("About to step");
         cpSpaceStep(space, timeStep);

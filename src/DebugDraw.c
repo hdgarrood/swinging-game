@@ -19,6 +19,31 @@ FillBackground(SDL_Surface* screen)
 }
 
 void
+DrawShape(cpShape* shape, SDL_Surface* screen)
+{
+	cpBody* body = shape->body;
+    DrawOptions opts;
+    opts.surface = screen;
+    opts.colour = (SDL_Colour) { 200, 200, 200 };
+
+	switch (shape->CP_PRIVATE(klass)->type)
+	{
+		case CP_CIRCLE_SHAPE:
+		{
+			cpVect centre = cpvadd(cpBodyGetPos(body),
+                                   cpCircleShapeGetOffset(shape));
+			SDLDraw_Circle(opts,
+                           centre.x,
+                           centre.y,
+                           cpCircleShapeGetRadius(shape));
+            break;
+        }
+        default: break;
+    }
+}
+
+void
 DrawSpace(cpSpace* space, SDL_Surface* screen)
 {
+	cpSpaceEachShape(space, (cpSpaceShapeIteratorFunc)DrawShape, screen);
 }

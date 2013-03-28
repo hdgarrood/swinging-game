@@ -38,6 +38,17 @@ DrawShape(cpShape* shape, SDL_Surface* screen)
                            cpCircleShapeGetRadius(shape));
             break;
         }
+        case CP_SEGMENT_SHAPE:
+        {
+            cpVect vect_a = cpSegmentShapeGetA(shape);
+            cpVect vect_b = cpSegmentShapeGetB(shape);
+            SDLDraw_Line(opts,
+                         vect_a.x,
+                         vect_a.y,
+                         vect_b.x,
+                         vect_b.y);
+            break;
+        }
         default: break;
     }
 }

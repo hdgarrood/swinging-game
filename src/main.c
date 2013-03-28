@@ -96,20 +96,46 @@ TestDrawLine(SDL_Surface* surface)
 	SDL_Colour colour = { 200, 150, 100 };
     opts.colour = colour;
 
+    puts("");
+    puts("==gradient less than 1==");
     puts("x increasing, y increasing");
     SDLDraw_Line(opts, 320, 240, 640, 480);
     SDL_Flip(surface);
 
+    puts("");
     puts("x decreasing, y decreasing");
     SDLDraw_Line(opts, 320, 240, 0, 0);
     SDL_Flip(surface);
-    
+
+    puts("");
     puts("x decreasing, y increasing");
     SDLDraw_Line(opts, 320, 240, 0, 480);
     SDL_Flip(surface);
 
+    puts("");
     puts("x increasing, y decreasing");
     SDLDraw_Line(opts, 320, 240, 640, 0);
+    SDL_Flip(surface);
+
+    puts("");
+    puts("==gradient greater than 1==");
+    puts("x increasing, y increasing");
+    SDLDraw_Line(opts, 320, 240, 340, 0);
+    SDL_Flip(surface);
+
+    puts("");
+    puts("x decreasing, y decreasing");
+    SDLDraw_Line(opts, 320, 240, 300, 0);
+    SDL_Flip(surface);
+
+    puts("");
+    puts("x decreasing, y increasing");
+    SDLDraw_Line(opts, 320, 240, 300, 480);
+    SDL_Flip(surface);
+
+    puts("");
+    puts("x increasing, y decreasing");
+    SDLDraw_Line(opts, 320, 240, 340, 480);
     SDL_Flip(surface);
 }
 
@@ -127,27 +153,27 @@ int main(int argc, char *argv[])
             SCREEN_BPP,
             SDL_SWSURFACE);
 
-    /* TestDrawLine(screen); */
-    /* SDL_Delay(5000); */
-    puts("About to create space");
-    cpSpace* space = CreateSpace();
+    TestDrawLine(screen);
+    SDL_Delay(5000);
+    /* puts("About to create space"); */
+    /* cpSpace* space = CreateSpace(); */
 
-    cpFloat timeStep = 1.0 / 60.0;
+    /* cpFloat timeStep = 1.0 / 60.0; */
 
-    for (cpFloat time=0; time < 5; time += timeStep)
-    {
-        puts("About to step");
-        cpSpaceStep(space, timeStep);
+    /* for (cpFloat time=0; time < 5; time += timeStep) */
+    /* { */
+    /*     puts("About to step"); */
+    /*     cpSpaceStep(space, timeStep); */
 
-        puts("About to draw world");
-        FillBackground(screen);
-        DrawSpace(space, screen);
+    /*     puts("About to draw world"); */
+    /*     FillBackground(screen); */
+    /*     DrawSpace(space, screen); */
 
-        SDL_Flip(screen);
-        SDL_Delay(timeStep * 1000);
-    }
+    /*     SDL_Flip(screen); */
+    /*     SDL_Delay(timeStep * 1000); */
+    /* } */
 
-    cpSpaceFree(space);
+    /* cpSpaceFree(space); */
 
     SDL_FreeSurface(screen);
     SDL_Quit();

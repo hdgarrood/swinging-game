@@ -2,12 +2,17 @@
 
 #include "Drawing.h"
 
-// General-purpose drawing functions. These should only assume use of SDL; no
-// physics libraries or anything in here.
-// All functions should take a DrawOptions as their first parameter.
-// All functions take care of locking the surface for you.
+/*
+ General-purpose drawing functions. These should only assume use of SDL; no
+ physics libraries or anything in here.
+ All functions should take a DrawOptions as their first parameter.
+ All functions take care of locking the surface for you.
+*/
 
-// Given a DrawOptions, return a Uint32 for its colour and surface.
+#define sgn(x) ((x<0)?-1:((x>0)?1:0)) /* macro to return the sign of a
+                                         number */
+
+/* Given a DrawOptions, return a Uint32 for its colour and surface. */
 static Uint32
 GetColourAsUint32(const DrawOptions opts)
 {
@@ -67,44 +72,48 @@ SDLDraw_Line(const DrawOptions opts,
              const int x1,
              const int y1)
 {
-    int initial_x,
-        final_x   = x1,
-        x_inc     = 1;
+    int dx     = x1-x0;      /* the horizontal distance of the line */
+    int dy     = y1-y0;      /* the vertical distance of the line */
+    int dxabs  = abs(dx);
+    int dyabs  = abs(dy);
+    int sdx    = sgn(dx);
+    int sdy    = sgn(dy);
+    int x      = dyabs>>1;
+    int y      = dxabs>>1;
+    int px     = x0;
+    int py     = y0;
 
-    if (y1 < y0)
+    SetPixel(opts, px, py);
+
+    printf("dxabs = %d, dyabs = %d\n", dxabs, dyabs);
+    if (dxabs >= dyabs) /* the line is more horizontal than vertical */
     {
-        SDLDraw_Line(opts, x1, y1, x0, y0);
-        return;
-    }
-    else if (x1 < x0)
-    {
-        x_inc = -1;
-    }
-
-    int dx = x_inc * (x1 - x0),
-        dy = y1 - y0,
-        D  = 2*dy - dx,
-        y  = y0;
-
-    initial_x = x0 + x_inc,
-
-    SetPixel(opts, x0, y0);
-
-    printf("init: %d, final: %d, inc: %d\n",
-            initial_x, final_x, x_inc);
-
-    for (int x = initial_x; x != final_x; x += x_inc)
-    {
-        if (D > 0)
+        printf("took first path\n");
+        for (int i = 0; i < dxabs; i++)
         {
-            y++;
-            SetPixel(opts, x, y);
-            D += 2 * (dy - dx);
+            y += dyabs;
+            if (y >= dxabs)
+            {
+                y -= dxabs;
+                py += sdy;
+            }
+            px += sdx;
+            SetPixel(opts, px, py);
         }
-        else
+    }
+    else /* the line is more vertical than horizontal */
+    {
+        printf("took second path\n");
+        for (int i = 0; i < dyabs; i++)
         {
-            SetPixel(opts, x, y);
-            D += 2 * dy;
+            x += dxabs;
+            if (x >= dyabs)
+            {
+                x -= dyabs;
+                px += sdx;
+            }
+            py += sdy;
+            SetPixel(opts, px, py);
         }
     }
 }

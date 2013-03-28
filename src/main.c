@@ -127,27 +127,27 @@ int main(int argc, char *argv[])
             SCREEN_BPP,
             SDL_SWSURFACE);
 
-    TestDrawLine(screen);
-    SDL_Delay(5000);
-    /* puts("About to create space"); */
-    /* cpSpace* space = CreateSpace(); */
+    /* TestDrawLine(screen); */
+    /* SDL_Delay(5000); */
+    puts("About to create space");
+    cpSpace* space = CreateSpace();
 
-    /* cpFloat timeStep = 1.0 / 60.0; */
+    cpFloat timeStep = 1.0 / 60.0;
 
-    /* for (cpFloat time=0; time < 5; time += timeStep) */
-    /* { */
-    /*     puts("About to step"); */
-    /*     cpSpaceStep(space, timeStep); */
+    for (cpFloat time=0; time < 5; time += timeStep)
+    {
+        puts("About to step");
+        cpSpaceStep(space, timeStep);
 
-    /*     puts("About to draw world"); */
-    /*     FillBackground(screen); */
-    /*     DrawSpace(space, screen); */
+        puts("About to draw world");
+        FillBackground(screen);
+        DrawSpace(space, screen);
 
-    /*     SDL_Flip(screen); */
-    /*     SDL_Delay(timeStep * 1000); */
-    /* } */
+        SDL_Flip(screen);
+        SDL_Delay(timeStep * 1000);
+    }
 
-    /* cpSpaceFree(space); */
+    cpSpaceFree(space);
 
     SDL_FreeSurface(screen);
     SDL_Quit();

@@ -26,7 +26,8 @@ DrawCircleShape(DrawOptions opts, cpShape* shape, cpBody* body)
                            cpCircleShapeGetOffset(shape));
     cpFloat radius = cpCircleShapeGetRadius(shape);
     cpFloat angle = cpBodyGetAngle(body);
-    cpVect edgePoint = cpv(radius * cos(angle), radius * sin(angle));
+    cpVect edgePoint = cpvadd(centre,
+                              cpv(radius * cos(angle), radius * sin(angle)));
 
     SDLDraw_Circle(opts, centre.x, centre.y, radius);
     SDLDraw_Line(opts, centre.x, centre.y, edgePoint.x, edgePoint.y);

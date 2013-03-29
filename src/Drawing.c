@@ -56,9 +56,6 @@ SDLDraw_Rect(DrawOptions opts, int x, int y, int w, int h)
     SDL_FillRect(opts.surface, &rect, get_sdl_colour_as_uint32(opts));
 }
 
-// lifted from:
-//   http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm#Algorithm_with_Integer_Arithmetic
-// FIXME : doesn't work in all quadrants
 void
 SDLDraw_Line(DrawOptions opts, int x0, int y0, int x1, int y1)
 {

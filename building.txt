@@ -1,9 +1,26 @@
-WINDOWS
-=======
+Requirements
+============
 
-Requirements:
+Chipmunk Physics (v6.1.4):
+    requires CMake (>= 2.6)
 
-CMake (v2.8.10.2) -- google, download, install, simples
+SDL (v1.12.15)
+
+Building on Unices
+==================
+
+On Ubuntu, CMake and SDL can come from repositories:
+    sudo apt-get install cmake libsdl1.2-dev libsdl-image1.2-dev
+
+Chipmunk should be built from source.
+
+Building on Windows
+===================
+
+I've been using MinGW (make, gcc, etc) for Windows development. Visual Studio
+will probably also work but I don't know how yet.
+
+CMake should be installed from their website.
 
 MinGW:
     google, download, install. You don't need MSYS.
@@ -21,8 +38,3 @@ SDL (v1.12.15):
     Copy lib\* to c:\mingw\lib
     Copy bin\* to c:\mingw\bin
     see lazyfoo.net if you get stuck
-
-UNICES
-======
-
-TODO

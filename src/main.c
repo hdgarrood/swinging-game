@@ -115,7 +115,6 @@ set_fps_caption(timer* fps_timer)
     char title[50];
     int fps = 0;
 
-    printf("setting step_times[%d] to %d\n", index, timer_get_ticks(fps_timer));
     step_times[index] = timer_get_ticks(fps_timer);
 
     timer_reset(fps_timer);
@@ -160,10 +159,7 @@ int main()
 
         int remaining_ms = TARGET_MS_PER_FRAME - timer_get_ticks(step_timer);
         if (remaining_ms > 0)
-        {
-            printf("delaying for %d\n", remaining_ms);
             SDL_Delay(remaining_ms);
-        }
 
         free_timer(step_timer);
 

@@ -59,5 +59,8 @@ timer_unpause(timer *t)
 int
 timer_get_ticks(timer *t)
 {
-	return (SDL_GetTicks() - t->start_ticks);
+	if (t->started)
+		return (SDL_GetTicks() - t->start_ticks);
+	else
+		return 0;
 }

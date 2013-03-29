@@ -95,15 +95,15 @@ SetupSignals()
     sigaction(SIGINT, &sigIntHandler, NULL);
 }
 
-float
-array_average(int array[], int size)
+double
+array_average(int array[], size_t size)
 {
     int sum = 0;
 
     for (int i = 0; i < size; i++)
         sum += array[i];
 
-    return ((float)sum / size);
+    return ((double)sum / size);
 }
 
 void
@@ -115,7 +115,11 @@ set_fps_caption(timer* fps_timer)
     char title[50];
     int fps = 0;
 
+    printf("setting step_times[%d] to %d\n", index, timer_get_ticks(fps_timer));
     step_times[index] = timer_get_ticks(fps_timer);
+
+    timer_reset(fps_timer);
+    timer_start(fps_timer);
     index = (index + 1) % 60;
 
     if (index == 59)
@@ -126,41 +130,40 @@ set_fps_caption(timer* fps_timer)
     }
 }
 
-int main(int argc, char *argv[])
+int main()
 {
     SetupSignals();
 
-    puts("About to SDL_Init");
     SDL_Init(SDL_INIT_EVERYTHING);
 
-    puts("About to create screen surface");
     SDL_Surface *screen = NULL;
     screen = SDL_SetVideoMode(SCREEN_WIDTH,
             SCREEN_HEIGHT,
             SCREEN_BPP,
             SDL_SWSURFACE);
 
-    puts("About to create space");
     cpSpace* space = CreateSpace();
 
     timer* fps_timer = make_timer();
+    timer_start(fps_timer);
 
     for (cpFloat time=0; time < 7; time += TARGET_SEC_PER_FRAME)
     {
         timer *step_timer = make_timer();
         timer_start(step_timer);
 
-        puts("About to step");
         cpSpaceStep(space, TARGET_SEC_PER_FRAME);
 
-        puts("About to draw world");
         FillBackground(screen);
         DrawSpace(space, screen);
         SDL_Flip(screen);
 
         int remaining_ms = TARGET_MS_PER_FRAME - timer_get_ticks(step_timer);
         if (remaining_ms > 0)
+        {
+            printf("delaying for %d\n", remaining_ms);
             SDL_Delay(remaining_ms);
+        }
 
         free_timer(step_timer);
 

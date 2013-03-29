@@ -26,13 +26,12 @@ get_sdl_colour_as_uint32(DrawOptions opts)
 static void
 set_pixel(DrawOptions opts, int x, int y)
 {
-    if (x >= opts.surface->w || x < 0 ||
-        y >= opts.surface->h || y < 0)
-    {
-        printf("thwarting an attempt to set pixel (%d, %d)\n",
-                x, y);
+    /* ensure we aren't outside the surface */
+    if (x >= opts.surface->w ||
+            x < 0 ||
+            y >= opts.surface->h ||
+            y < 0)
         return;
-    }
 
     if (SDL_MUSTLOCK(opts.surface))
         SDL_LockSurface(opts.surface);

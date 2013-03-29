@@ -57,11 +57,11 @@ CreateSpace()
 {
     cpVect gravity = cpv(0, 150);
 
-    cpSpace* space = cpSpaceNew();
+    cpSpace *space = cpSpaceNew();
     cpSpaceSetGravity(space, gravity);
 
     // create the ground
-    cpShape* ground = cpSegmentShapeNew(space->staticBody,
+    cpShape *ground = cpSegmentShapeNew(space->staticBody,
                                         cpv(0, 300),
                                         cpv(640, 480),
                                         0);
@@ -74,10 +74,10 @@ CreateSpace()
     cpFloat mass = 10;
     cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
 
-    cpBody* ballBody = cpSpaceAddBody(space, cpBodyNew(mass, moment));
+    cpBody *ballBody = cpSpaceAddBody(space, cpBodyNew(mass, moment));
     cpBodySetPos(ballBody, cpv(40, 40));
 
-    cpShape* ballShape = cpSpaceAddShape(space,
+    cpShape *ballShape = cpSpaceAddShape(space,
                                          cpCircleShapeNew(ballBody,
                                                           radius,
                                                           cpvzero));
@@ -117,7 +117,7 @@ array_average(int array[], size_t size)
 }
 
 void
-set_fps_caption(timer* fps_timer)
+set_fps_caption(struct timer *fps_timer)
 {
     /* store up to 60 previous step times */
     static int step_times[60];
@@ -151,15 +151,16 @@ int main()
             SCREEN_BPP,
             SDL_SWSURFACE);
 
-    cpSpace* space = CreateSpace();
+    cpSpace *space = CreateSpace();
 
-    timer* fps_timer = make_timer();
+    struct timer *fps_timer = make_timer();
     timer_start(fps_timer);
 
     for (cpFloat time=0; time < 7; time += TARGET_SEC_PER_FRAME)
     {
-        timer *step_timer = make_timer();
+        struct timer *step_timer = make_timer();
         timer_start(step_timer);
+
 
         cpSpaceStep(space, TARGET_SEC_PER_FRAME);
 

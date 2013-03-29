@@ -53,7 +53,7 @@ const cpFloat TARGET_SEC_PER_FRAME = 0.01667;
 /* } */
 
 cpSpace*
-CreateSpace()
+create_space()
 {
     cpVect gravity = cpv(0, 150);
 
@@ -88,21 +88,24 @@ CreateSpace()
 }
 
 void
-CatchSignalAndDie(int s)
+catch_signal_and_die(int signal)
 {
-    printf("Caught signal %d\n", s);
+    printf("Caught signal %d\n", signal);
     exit(1);
 }
 
+/*
+ * use sigaction to register a SIGINT handler, which causes the program to
+ * exit.
+ */
 void
-SetupSignals()
+setup_signals()
 {
-    /* die on SIGINT */
-    struct sigaction sigIntHandler;
-    sigIntHandler.sa_handler = CatchSignalAndDie;
-    sigemptyset(&sigIntHandler.sa_mask);
-    sigIntHandler.sa_flags = 0;
-    sigaction(SIGINT, &sigIntHandler, NULL);
+    struct sigaction sigint_handler;
+    sigint_handler.sa_handler = catch_signal_and_die;
+    sigemptyset(&sigint_handler.sa_mask);
+    sigint_handler.sa_flags = 0;
+    sigaction(SIGINT, &sigint_handler, NULL);
 }
 
 double
@@ -117,7 +120,7 @@ array_average(int array[], size_t size)
 }
 
 void
-set_fps_caption(struct timer *fps_timer)
+display_fps(struct timer *fps_timer)
 {
     /* store up to 60 previous step times */
     static int step_times[60];
@@ -141,7 +144,7 @@ set_fps_caption(struct timer *fps_timer)
 
 int main()
 {
-    SetupSignals();
+    setup_signals();
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -151,7 +154,7 @@ int main()
             SCREEN_BPP,
             SDL_SWSURFACE);
 
-    cpSpace *space = CreateSpace();
+    cpSpace *space = create_space();
 
     struct timer *fps_timer = make_timer();
     timer_start(fps_timer);

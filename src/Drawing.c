@@ -14,7 +14,7 @@
 
 /* Given a DrawOptions, return a Uint32 for its colour and surface. */
 static Uint32
-GetColourAsUint32(const DrawOptions opts)
+get_sdl_colour_as_uint32(DrawOptions opts)
 {
     return SDL_MapRGB(opts.surface->format,
                       opts.colour.r,
@@ -24,9 +24,7 @@ GetColourAsUint32(const DrawOptions opts)
 
 // Set pixel (x,y) on the SDL_Surface opts.surface to opts.colour
 static void
-SetPixel(const DrawOptions opts,
-         const int x,
-         const int y)
+set_pixel(DrawOptions opts, int x, int y)
 {
     if (x >= opts.surface->w || x < 0 ||
         y >= opts.surface->h || y < 0)
@@ -44,7 +42,7 @@ SetPixel(const DrawOptions opts,
     int index = (opts.surface->w * y) + x;
     int max = (opts.surface->w * opts.surface->h);
 
-    pixels[index] = GetColourAsUint32(opts);
+    pixels[index] = get_sdl_colour_as_uint32(opts);
 
     if (SDL_MUSTLOCK(opts.surface))
         SDL_UnlockSurface(opts.surface);
@@ -52,25 +50,17 @@ SetPixel(const DrawOptions opts,
 
 // Draw a rectangle, with the given x, y, width, and height.
 void
-SDLDraw_Rect(const DrawOptions opts,
-             const int x,
-             const int y,
-             const int w,
-             const int h)
+SDLDraw_Rect(DrawOptions opts, int x, int y, int w, int h)
 {
     SDL_Rect rect = {x, y, w, h};
-    SDL_FillRect(opts.surface, &rect, GetColourAsUint32(opts));
+    SDL_FillRect(opts.surface, &rect, get_sdl_colour_as_uint32(opts));
 }
 
 // lifted from:
 //   http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm#Algorithm_with_Integer_Arithmetic
 // FIXME : doesn't work in all quadrants
 void
-SDLDraw_Line(const DrawOptions opts,
-             const int x0,
-             const int y0,
-             const int x1,
-             const int y1)
+SDLDraw_Line(DrawOptions opts, int x0, int y0, int x1, int y1)
 {
     int dx     = x1-x0;      /* the horizontal distance of the line */
     int dy     = y1-y0;      /* the vertical distance of the line */
@@ -83,7 +73,7 @@ SDLDraw_Line(const DrawOptions opts,
     int px     = x0;
     int py     = y0;
 
-    SetPixel(opts, px, py);
+    set_pixel(opts, px, py);
 
     if (dxabs >= dyabs) /* the line is more horizontal than vertical */
     {
@@ -96,7 +86,7 @@ SDLDraw_Line(const DrawOptions opts,
                 py += sdy;
             }
             px += sdx;
-            SetPixel(opts, px, py);
+            set_pixel(opts, px, py);
         }
     }
     else /* the line is more vertical than horizontal */
@@ -110,17 +100,14 @@ SDLDraw_Line(const DrawOptions opts,
                 px += sdx;
             }
             py += sdy;
-            SetPixel(opts, px, py);
+            set_pixel(opts, px, py);
         }
     }
 }
 
 // TODO: filled circles
 void
-SDLDraw_Circle(const DrawOptions opts,
-               const int x0,
-               const int y0,
-               const int radius)
+SDLDraw_Circle(DrawOptions opts, int x0, int y0, int radius)
 {
     int f = 1 - radius;
     int ddF_x = 1;
@@ -128,10 +115,10 @@ SDLDraw_Circle(const DrawOptions opts,
     int x = 0;
     int y = radius;
 
-    SetPixel(opts, x0, y0 + radius);
-    SetPixel(opts, x0, y0 - radius);
-    SetPixel(opts, x0 + radius, y0);
-    SetPixel(opts, x0 - radius, y0);
+    set_pixel(opts, x0, y0 + radius);
+    set_pixel(opts, x0, y0 - radius);
+    set_pixel(opts, x0 + radius, y0);
+    set_pixel(opts, x0 - radius, y0);
 
     while(x < y)
     {
@@ -144,13 +131,13 @@ SDLDraw_Circle(const DrawOptions opts,
         x++;
         ddF_x += 2;
         f += ddF_x;
-        SetPixel(opts, x0 + x, y0 + y);
-        SetPixel(opts, x0 - x, y0 + y);
-        SetPixel(opts, x0 + x, y0 - y);
-        SetPixel(opts, x0 - x, y0 - y);
-        SetPixel(opts, x0 + y, y0 + x);
-        SetPixel(opts, x0 - y, y0 + x);
-        SetPixel(opts, x0 + y, y0 - x);
-        SetPixel(opts, x0 - y, y0 - x);
+        set_pixel(opts, x0 + x, y0 + y);
+        set_pixel(opts, x0 - x, y0 + y);
+        set_pixel(opts, x0 + x, y0 - y);
+        set_pixel(opts, x0 - x, y0 - y);
+        set_pixel(opts, x0 + y, y0 + x);
+        set_pixel(opts, x0 - y, y0 + x);
+        set_pixel(opts, x0 + y, y0 - x);
+        set_pixel(opts, x0 - y, y0 - x);
     }
 }

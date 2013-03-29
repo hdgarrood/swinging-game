@@ -7,6 +7,7 @@
 
 #include "Drawing.h"
 #include "DebugDraw.h"
+#include "Timer.h"
 
 const int SCREEN_WIDTH  = 640;
 const int SCREEN_HEIGHT = 480;
@@ -67,7 +68,7 @@ CreateSpace()
                                          cpCircleShapeNew(ballBody,
                                                           radius,
                                                           cpvzero));
-    cpShapeSetElasticity(ballShape, 0.8);
+    cpShapeSetElasticity(ballShape, 0.7);
     cpShapeSetFriction(ballShape, 0.7);
 
     return space;
@@ -108,19 +109,28 @@ int main(int argc, char *argv[])
     puts("About to create space");
     cpSpace* space = CreateSpace();
 
-    cpFloat timeStep = 1.0 / 60.0;
+    cpFloat time_step = 1.0 / TARGET_FPS;
+    timer my_timer;
+    timer *timer_ptr = &my_timer;
 
-    for (cpFloat time=0; time < 7; time += timeStep)
+    for (cpFloat time=0; time < 7; time += time_step)
     {
+        puts("about to reset timer");
+        timer_reset(timer_ptr);
+        puts("about to start timer");
+        timer_start(timer_ptr);
+
         puts("About to step");
-        cpSpaceStep(space, timeStep);
+        cpSpaceStep(space, time_step);
 
         puts("About to draw world");
         FillBackground(screen);
         DrawSpace(space, screen);
-
         SDL_Flip(screen);
-        SDL_Delay(timeStep * 1000);
+
+        printf("that took: %d\n", timer_get_ticks(timer_ptr));
+        /* if (remaining_ms > 0) */
+        SDL_Delay(16);
     }
 
     cpSpaceFree(space);

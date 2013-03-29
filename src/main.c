@@ -11,6 +11,7 @@
 const int SCREEN_WIDTH  = 640;
 const int SCREEN_HEIGHT = 480;
 const int SCREEN_BPP    = 32;
+const int TARGET_FPS    = 60;
 
 /* SDL_Surface *load_image(std::string filename) */
 /* { */
@@ -50,7 +51,7 @@ CreateSpace()
                                         cpv(0, 300),
                                         cpv(640, 480),
                                         0);
-    cpShapeSetElasticity(ground, 0.8);
+    cpShapeSetElasticity(ground, 1.0);
     cpShapeSetFriction(ground, 1);
     cpSpaceAddShape(space, ground);
 

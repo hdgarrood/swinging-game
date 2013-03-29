@@ -5,9 +5,9 @@
 #include <SDL/SDL.h>
 #include <chipmunk/chipmunk.h>
 
-#include "Drawing.h"
-#include "DebugDraw.h"
-#include "Timer.h"
+#include "drawing.h"
+#include "debug_draw.h"
+#include "timer.h"
 
 #define DEBUG 1
 

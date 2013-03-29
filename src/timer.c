@@ -1,6 +1,6 @@
 #include <SDL/SDL.h>
 
-#include "Timer.h"
+#include "timer.h"
 
 timer*
 make_timer()

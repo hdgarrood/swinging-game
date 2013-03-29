@@ -1,6 +1,6 @@
 #include <SDL/SDL.h>
 
-#include "Drawing.h"
+#include "drawing.h"
 
 /*
  General-purpose drawing functions. These should only assume use of SDL; no

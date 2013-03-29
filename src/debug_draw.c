@@ -2,7 +2,7 @@
 #include <math.h>
 #include <chipmunk/chipmunk.h>
 
-#include "Drawing.h"
+#include "drawing.h"
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;

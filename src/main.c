@@ -12,7 +12,10 @@
 const int SCREEN_WIDTH  = 640;
 const int SCREEN_HEIGHT = 480;
 const int SCREEN_BPP    = 32;
+
 const int TARGET_FPS    = 60;
+const cpFloat TARGET_MS_PER_FRAME  = 16.67;
+const cpFloat TARGET_SEC_PER_FRAME = 0.01667;
 
 /* SDL_Surface *load_image(std::string filename) */
 /* { */
@@ -92,6 +95,37 @@ SetupSignals()
     sigaction(SIGINT, &sigIntHandler, NULL);
 }
 
+float
+array_average(int array[], int size)
+{
+    int sum = 0;
+
+    for (int i = 0; i < size; i++)
+        sum += array[i];
+
+    return ((float)sum / size);
+}
+
+void
+set_fps_caption(timer* fps_timer)
+{
+    /* store up to 60 previous step times */
+    static int step_times[60];
+    static int index = 0;
+    char title[50];
+    int fps = 0;
+
+    step_times[index] = timer_get_ticks(fps_timer);
+    index = (index + 1) % 60;
+
+    if (index == 59)
+    {
+        int average_fps = 1000 / array_average(step_times, 60);
+        sprintf(title, "FPS: %d", average_fps);
+        SDL_WM_SetCaption(title, NULL);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     SetupSignals();
@@ -109,29 +143,31 @@ int main(int argc, char *argv[])
     puts("About to create space");
     cpSpace* space = CreateSpace();
 
-    cpFloat time_step = 1.0 / TARGET_FPS;
-    timer my_timer;
-    timer *timer_ptr = &my_timer;
+    timer* fps_timer = make_timer();
 
-    for (cpFloat time=0; time < 7; time += time_step)
+    for (cpFloat time=0; time < 7; time += TARGET_SEC_PER_FRAME)
     {
-        puts("about to reset timer");
-        timer_reset(timer_ptr);
-        puts("about to start timer");
-        timer_start(timer_ptr);
+        timer *step_timer = make_timer();
+        timer_start(step_timer);
 
         puts("About to step");
-        cpSpaceStep(space, time_step);
+        cpSpaceStep(space, TARGET_SEC_PER_FRAME);
 
         puts("About to draw world");
         FillBackground(screen);
         DrawSpace(space, screen);
         SDL_Flip(screen);
 
-        printf("that took: %d\n", timer_get_ticks(timer_ptr));
-        /* if (remaining_ms > 0) */
-        SDL_Delay(16);
+        int remaining_ms = TARGET_MS_PER_FRAME - timer_get_ticks(step_timer);
+        if (remaining_ms > 0)
+            SDL_Delay(remaining_ms);
+
+        free_timer(step_timer);
+
+        set_fps_caption(fps_timer);
     }
+
+    free_timer(fps_timer);
 
     cpSpaceFree(space);
 

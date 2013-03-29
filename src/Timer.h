@@ -10,6 +10,8 @@ typedef struct timer {
 	int paused_ticks;
 } timer;
 
+timer *make_timer();
+void free_timer(timer *t);
 void timer_reset(timer *t);
 void timer_start(timer *t);
 void timer_pause(timer *t);

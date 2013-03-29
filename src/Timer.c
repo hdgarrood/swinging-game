@@ -2,6 +2,20 @@
 
 #include "Timer.h"
 
+timer*
+make_timer()
+{
+	timer* t = malloc(sizeof(timer));
+	timer_reset(t);
+	return t;
+}
+
+void
+free_timer(timer* t)
+{
+	free(t);
+}
+
 void
 timer_reset(timer *t)
 {

@@ -46,6 +46,26 @@ draw_segment_shape(struct draw_options opts, cpShape* shape, cpBody* body)
                  vect_b.y);
 }
 
+static void
+draw_poly_shape(struct draw_options opts, cpShape *shape, cpBody *body)
+{
+	int num_verts = cpPolyShapeGetNumVerts(shape);
+	cpVect first_vert = cpPolyShapeGetVert(shape, 0);
+	cpVect prev_vert = first_vert;
+
+	for (int i = 1; i < num_verts; i++)
+	{
+		cpVect vert = cpPolyShapeGetVert(shape, i);
+		debug_putsf("drawing a line from (%f, %f) to (%f, %f)",
+				prev_vert.x, prev_vert.y, vert.x, vert.y);
+		sdldraw_line(opts, prev_vert.x, prev_vert.y, vert.x, vert.y);
+		prev_vert = vert;
+	}
+
+	/* close up the polygon */
+	sdldraw_line(opts, prev_vert.x, prev_vert.y, first_vert.x, first_vert.y);
+}
+
 void
 draw_shape(cpShape* shape, SDL_Surface* screen)
 {
@@ -63,6 +83,9 @@ draw_shape(cpShape* shape, SDL_Surface* screen)
         case CP_SEGMENT_SHAPE:
             draw_segment_shape(opts, shape, body);
             break;
+		case CP_POLY_SHAPE:
+			draw_poly_shape(opts, shape, body);
+			break;
         default:
 			debug_putsf("ignoring unrecognised shape type %d",
 					shape->CP_PRIVATE(klass)->type);

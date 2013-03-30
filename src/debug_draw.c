@@ -8,19 +8,18 @@ extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 
 void
-FillBackground(SDL_Surface* screen)
+draw_background(SDL_Surface* screen)
 {
-    DrawOptions background_opts;
+    struct draw_options opts = {
+        .surface = screen,
+        .colour = (SDL_Colour){ 0, 0, 0 }
+    };
 
-    background_opts.surface = screen;
-	SDL_Colour colour = { 0, 0, 0 };
-    background_opts.colour = colour;
-
-    SDLDraw_Rect(background_opts, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    sdldraw_rect(opts, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 static void
-DrawCircleShape(DrawOptions opts, cpShape* shape, cpBody* body)
+draw_circle_shape(struct draw_options opts, cpShape* shape, cpBody* body)
 {
     cpVect centre = cpvadd(cpBodyGetPos(body),
                            cpCircleShapeGetOffset(shape));
@@ -29,17 +28,17 @@ DrawCircleShape(DrawOptions opts, cpShape* shape, cpBody* body)
     cpVect edgePoint = cpvadd(centre,
                               cpv(radius * cos(angle), radius * sin(angle)));
 
-    SDLDraw_Circle(opts, centre.x, centre.y, radius);
-    SDLDraw_Line(opts, centre.x, centre.y, edgePoint.x, edgePoint.y);
+    sdldraw_circle(opts, centre.x, centre.y, radius);
+    sdldraw_line(opts, centre.x, centre.y, edgePoint.x, edgePoint.y);
 }
 
 static void
-DrawSegmentShape(DrawOptions opts, cpShape* shape, cpBody* body)
+draw_segment_shape(struct draw_options opts, cpShape* shape, cpBody* body)
 {
     cpVect vect_a = cpSegmentShapeGetA(shape);
     cpVect vect_b = cpSegmentShapeGetB(shape);
 
-    SDLDraw_Line(opts,
+    sdldraw_line(opts,
                  vect_a.x,
                  vect_a.y,
                  vect_b.x,
@@ -47,20 +46,21 @@ DrawSegmentShape(DrawOptions opts, cpShape* shape, cpBody* body)
 }
 
 void
-DrawShape(cpShape* shape, SDL_Surface* screen)
+draw_shape(cpShape* shape, SDL_Surface* screen)
 {
 	cpBody* body = shape->body;
-    DrawOptions opts;
-    opts.surface = screen;
-    opts.colour = (SDL_Colour) { 200, 200, 200 };
+    struct draw_options opts = {
+        .surface = screen,
+        .colour = (SDL_Colour){ 200, 200, 200 }
+    };
 
 	switch (shape->CP_PRIVATE(klass)->type)
 	{
 		case CP_CIRCLE_SHAPE:
-            DrawCircleShape(opts, shape, body);
+            draw_circle_shape(opts, shape, body);
             break;
         case CP_SEGMENT_SHAPE:
-            DrawSegmentShape(opts, shape, body);
+            draw_segment_shape(opts, shape, body);
             break;
         default:
             break;
@@ -68,7 +68,7 @@ DrawShape(cpShape* shape, SDL_Surface* screen)
 }
 
 void
-DrawSpace(cpSpace* space, SDL_Surface* screen)
+debug_draw_space(cpSpace* space, SDL_Surface* screen)
 {
-	cpSpaceEachShape(space, (cpSpaceShapeIteratorFunc)DrawShape, screen);
+	cpSpaceEachShape(space, (cpSpaceShapeIteratorFunc)draw_shape, screen);
 }

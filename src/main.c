@@ -5,27 +5,9 @@
 #include <SDL/SDL.h>
 #include <chipmunk/chipmunk.h>
 
-#include "drawing.h"
-#include "debug_draw.h"
-#include "timer.h"
-
-#define DEBUG 1
-
-#define debug_println(fmt, ...) \
-        do { if (DEBUG) fprintf(stderr, "%s:%d in %s(): " fmt "\n", __FILE__, \
-                                __LINE__, __func__, __VA_ARGS__); } while (0)
-
-#define debug_print(fmt, ...) \
-        do { if (DEBUG) fprintf(stderr, "%s:%d in %s(): " fmt, __FILE__, \
-                                __LINE__, __func__, __VA_ARGS__); } while (0)
-
-const int SCREEN_WIDTH  = 640;
-const int SCREEN_HEIGHT = 480;
-const int SCREEN_BPP    = 32;
-
-const int TARGET_FPS    = 60;
-const cpFloat TARGET_MS_PER_FRAME  = 16.67;
-const cpFloat TARGET_SEC_PER_FRAME = 0.01667;
+#include "utils.h"
+#include "game.h"
+#include "macros.h"
 
 /* SDL_Surface *load_image(std::string filename) */
 /* { */
@@ -52,8 +34,8 @@ const cpFloat TARGET_SEC_PER_FRAME = 0.01667;
 /*     SDL_BlitSurface(source, NULL, dest, &offset); */
 /* } */
 
-cpSpace*
-create_space()
+cpSpace
+*create_space()
 {
     cpVect gravity = cpv(0, 150);
 
@@ -108,83 +90,16 @@ setup_signals()
     sigaction(SIGINT, &sigint_handler, NULL);
 }
 
-double
-array_average(int array[], size_t size)
-{
-    int sum = 0;
-
-    for (int i = 0; i < size; i++)
-        sum += array[i];
-
-    return ((double)sum / size);
-}
-
-void
-display_fps(struct timer *fps_timer)
-{
-    /* store up to 60 previous step times */
-    static int step_times[60];
-    static int index = 0;
-    char title[50];
-    int fps = 0;
-
-    step_times[index] = timer_get_ticks(fps_timer);
-
-    timer_reset(fps_timer);
-    timer_start(fps_timer);
-    index = (index + 1) % 60;
-
-    if (index == 59)
-    {
-        int average_fps = 1000 / array_average(step_times, 60);
-        sprintf(title, "FPS: %d", average_fps);
-        SDL_WM_SetCaption(title, NULL);
-    }
-}
-
 int main()
 {
     setup_signals();
-
     SDL_Init(SDL_INIT_EVERYTHING);
 
-    SDL_Surface *screen = NULL;
-    screen = SDL_SetVideoMode(SCREEN_WIDTH,
-            SCREEN_HEIGHT,
-            SCREEN_BPP,
-            SDL_SWSURFACE);
+    struct game *game = make_game();
+    debug_println("%s", "entering main loop...");
+    game_main_loop(game);
+    debug_println("%s", "exiting main loop...");
 
-    cpSpace *space = create_space();
-
-    struct timer *fps_timer = make_timer();
-    timer_start(fps_timer);
-
-    for (cpFloat time=0; time < 7; time += TARGET_SEC_PER_FRAME)
-    {
-        struct timer *step_timer = make_timer();
-        timer_start(step_timer);
-
-
-        cpSpaceStep(space, TARGET_SEC_PER_FRAME);
-
-        FillBackground(screen);
-        DrawSpace(space, screen);
-        SDL_Flip(screen);
-
-        int remaining_ms = TARGET_MS_PER_FRAME - timer_get_ticks(step_timer);
-        if (remaining_ms > 0)
-            SDL_Delay(remaining_ms);
-
-        free_timer(step_timer);
-
-        set_fps_caption(fps_timer);
-    }
-
-    free_timer(fps_timer);
-
-    cpSpaceFree(space);
-
-    SDL_FreeSurface(screen);
     SDL_Quit();
 
     return 0;

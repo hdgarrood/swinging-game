@@ -3,13 +3,13 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
-typedef struct DrawOptions_ {
+struct draw_options {
     SDL_Surface* surface;
     SDL_Colour   colour;
-} DrawOptions;
+};
 
-void SDLDraw_Rect(DrawOptions, int, int, int, int);
-void SDLDraw_Line(DrawOptions, int, int, int, int);
-void SDLDraw_Circle(DrawOptions, int, int, int);
+void sdldraw_rect(struct draw_options, int, int, int, int);
+void sdldraw_line(struct draw_options, int, int, int, int);
+void sdldraw_circle(struct draw_options, int, int, int);
 
 #endif

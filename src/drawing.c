@@ -5,16 +5,16 @@
 /*
  General-purpose drawing functions. These should only assume use of SDL; no
  physics libraries or anything in here.
- All functions should take a DrawOptions as their first parameter.
+ All functions should take a struct draw_options as their first parameter.
  All functions take care of locking the surface for you.
 */
 
 #define sgn(x) ((x<0)?-1:((x>0)?1:0)) /* macro to return the sign of a
                                          number */
 
-/* Given a DrawOptions, return a Uint32 for its colour and surface. */
+/* Given a struct draw_options, return a Uint32 for its colour and surface. */
 static Uint32
-get_sdl_colour_as_uint32(DrawOptions opts)
+get_sdl_colour_as_uint32(struct draw_options opts)
 {
     return SDL_MapRGB(opts.surface->format,
                       opts.colour.r,
@@ -24,7 +24,7 @@ get_sdl_colour_as_uint32(DrawOptions opts)
 
 // Set pixel (x,y) on the SDL_Surface opts.surface to opts.colour
 static void
-set_pixel(DrawOptions opts, int x, int y)
+set_pixel(struct draw_options opts, int x, int y)
 {
     /* ensure we aren't outside the surface */
     if (x >= opts.surface->w ||
@@ -49,14 +49,14 @@ set_pixel(DrawOptions opts, int x, int y)
 
 // Draw a rectangle, with the given x, y, width, and height.
 void
-SDLDraw_Rect(DrawOptions opts, int x, int y, int w, int h)
+sdldraw_rect(struct draw_options opts, int x, int y, int w, int h)
 {
     SDL_Rect rect = {x, y, w, h};
     SDL_FillRect(opts.surface, &rect, get_sdl_colour_as_uint32(opts));
 }
 
 void
-SDLDraw_Line(DrawOptions opts, int x0, int y0, int x1, int y1)
+sdldraw_line(struct draw_options opts, int x0, int y0, int x1, int y1)
 {
     int dx     = x1-x0;      /* the horizontal distance of the line */
     int dy     = y1-y0;      /* the vertical distance of the line */
@@ -103,7 +103,7 @@ SDLDraw_Line(DrawOptions opts, int x0, int y0, int x1, int y1)
 
 // TODO: filled circles
 void
-SDLDraw_Circle(DrawOptions opts, int x0, int y0, int radius)
+sdldraw_circle(struct draw_options opts, int x0, int y0, int radius)
 {
     int f = 1 - radius;
     int ddF_x = 1;

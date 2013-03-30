@@ -4,7 +4,7 @@
 #ifndef DEBUG_DRAW_H
 #define DEBUG_DRAW_H
 
-void FillBackground(SDL_Surface* screen);
-void DrawSpace(cpSpace* space, SDL_Surface* screen);
+void draw_background(SDL_Surface* screen);
+void debug_draw_space(cpSpace* space, SDL_Surface* screen);
 
 #endif

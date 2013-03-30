@@ -19,6 +19,8 @@ struct game_state {
      */
     cpSpace *space;
     cpBody *ball;
+    cpBody *mouse_body;
+    cpConstraint *constraint;
 };
 
 struct game_state *make_game_state();

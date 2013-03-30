@@ -45,6 +45,12 @@ game_get_input(struct game *game)
 
     if (SDL_QuitRequested())
         game->quit_requested = true;
+
+    /* discard all other events */
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        debug_putsf("ignoring an event of type: %d", event.type);
+    }
 }
 
 void

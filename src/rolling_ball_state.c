@@ -23,6 +23,8 @@ struct game_state
     state->draw = &draw;
 
     state->space = create_space(state);
+    state->constraint = NULL;
+    state->mouse_body = NULL;
 
     return state;
 }
@@ -31,6 +33,31 @@ static void
 handle_events(struct game_state *state)
 {
     debug_puts("inside handle_events");
+
+    if (state->mouse_body == NULL)
+    {
+        debug_puts("mouse body is NULL");
+        if (state->game->mouse_down)
+        {
+            debug_puts("creating mouse body");
+            cpBody *mouse_body = cpBodyNewStatic();
+            state->constraint = cpPinJointNew(mouse_body, state->ball,
+                                              cpvzero, cpvzero);
+
+            state->mouse_body = mouse_body;
+        }
+    }
+    else
+    {
+        if (!state->game->mouse_down)
+        {
+            debug_puts("freeing mouse body");
+            cpConstraintFree(state->constraint);
+            state->constraint = NULL;
+            cpBodyFree(state->mouse_body);
+            state->mouse_body = NULL;
+        }
+    }
 }
 
 static cpSpace

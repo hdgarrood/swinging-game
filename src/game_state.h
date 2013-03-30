@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include <SDL/SDL.h>
 #include <chipmunk/chipmunk.h>
 
@@ -7,9 +9,9 @@
 struct game_state {
     cpSpace *space;
     struct game *game;
-    int *mouse_x;
-    int *mouse_y;
-    Uint8 mouse_state;
+    int mouse_x;
+    int mouse_y;
+    bool mouse_down;
 };
 
 struct game_state *make_game_state();

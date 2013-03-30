@@ -62,8 +62,13 @@ free_game_state(struct game_state *state)
 void
 game_state_handle_events(struct game_state *state)
 {
-    /* retrieve mouse button state and mouse position */
-    /* state->mouse_state = SDL_GetMouseState(state->mouse_x, state->mouse_y); */
+    /* retrieve mouse button 1 state and mouse position */
+    int x, y;
+    Uint8 mouse_state = SDL_GetMouseState(&x, &y);
+
+    state->mouse_x = x;
+    state->mouse_y = y;
+    state->mouse_down = (mouse_state & SDL_BUTTON(1));
 
     if (SDL_QuitRequested())
         state->game->quit = true;

@@ -109,7 +109,7 @@ draw(struct game_state *state, SDL_Surface *screen)
 {
     draw_background(screen);
 
-    if (DEBUG)
+    if (HAS_DEBUG)
         debug_draw_space(state->space, screen);
 
     SDL_Flip(screen);

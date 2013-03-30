@@ -3,6 +3,7 @@
 
 #include "game.h"
 #include "game_state.h"
+#include "ent_switch.h"
 #include "debug_draw.h"
 #include "constants.h"
 #include "macros.h"
@@ -84,10 +85,11 @@ static cpSpace
                                         0);
     cpShapeSetElasticity(ground, 1.0);
     cpShapeSetFriction(ground, 1);
+    cpShapeSetLayers(ground, L_GROUND);
     cpSpaceAddShape(space, ground);
 
     // create the ball
-    cpFloat radius = 40;
+    cpFloat radius = 30;
     cpFloat mass = 10;
     cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
 
@@ -99,6 +101,10 @@ static cpSpace
 
     cpShapeSetElasticity(ball_shape, 0.7);
     cpShapeSetFriction(ball_shape, 0.7);
+    cpShapeSetLayers(ball_shape, L_PLAYER);
+
+    // create a switch
+    make_switch(space, cpv(30, 50));
 
     state->ball = ball;
     return space;

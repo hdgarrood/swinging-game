@@ -6,3 +6,7 @@ const int SCREEN_BPP    = 32;
 
 const int TARGET_FPS    = 60;
 const cpFloat TARGET_SEC_PER_FRAME = 0.0166667;
+
+const cpLayers L_PLAYER = 1 | 2;
+const cpLayers L_SWITCH = 2;
+const cpLayers L_GROUND = 1;

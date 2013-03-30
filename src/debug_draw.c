@@ -50,14 +50,13 @@ static void
 draw_poly_shape(struct draw_options opts, cpShape *shape, cpBody *body)
 {
 	int num_verts = cpPolyShapeGetNumVerts(shape);
-	cpVect first_vert = cpPolyShapeGetVert(shape, 0);
+	cpVect first_vert = cpBodyLocal2World(body, cpPolyShapeGetVert(shape, 0));
 	cpVect prev_vert = first_vert;
-
+	cpVect pos = cpBodyGetPos(body);
+	
 	for (int i = 1; i < num_verts; i++)
 	{
-		cpVect vert = cpPolyShapeGetVert(shape, i);
-		debug_putsf("drawing a line from (%f, %f) to (%f, %f)",
-				prev_vert.x, prev_vert.y, vert.x, vert.y);
+		cpVect vert = cpBodyLocal2World(body, cpPolyShapeGetVert(shape, i));
 		sdldraw_line(opts, prev_vert.x, prev_vert.y, vert.x, vert.y);
 		prev_vert = vert;
 	}

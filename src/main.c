@@ -34,40 +34,6 @@
 /*     SDL_BlitSurface(source, NULL, dest, &offset); */
 /* } */
 
-cpSpace
-*create_space()
-{
-    cpVect gravity = cpv(0, 150);
-
-    cpSpace *space = cpSpaceNew();
-    cpSpaceSetGravity(space, gravity);
-
-    // create the ground
-    cpShape *ground = cpSegmentShapeNew(space->staticBody,
-                                        cpv(0, 300),
-                                        cpv(640, 480),
-                                        0);
-    cpShapeSetElasticity(ground, 1.0);
-    cpShapeSetFriction(ground, 1);
-    cpSpaceAddShape(space, ground);
-
-    // create the ball
-    cpFloat radius = 40;
-    cpFloat mass = 10;
-    cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
-
-    cpBody *ballBody = cpSpaceAddBody(space, cpBodyNew(mass, moment));
-    cpBodySetPos(ballBody, cpv(40, 40));
-
-    cpShape *ballShape = cpSpaceAddShape(space,
-                                         cpCircleShapeNew(ballBody,
-                                                          radius,
-                                                          cpvzero));
-    cpShapeSetElasticity(ballShape, 0.7);
-    cpShapeSetFriction(ballShape, 0.7);
-
-    return space;
-}
 
 void
 catch_signal_and_die(int signal)

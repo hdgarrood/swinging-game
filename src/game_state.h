@@ -9,8 +9,7 @@
 struct game_state {
     cpSpace *space;
     struct game *game;
-    int mouse_x;
-    int mouse_y;
+    cpVect mouse_pos;
     bool mouse_down;
 };
 

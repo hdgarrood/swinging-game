@@ -40,9 +40,17 @@ handle_events(struct game_state *state)
         if (state->game->mouse_down)
         {
             debug_puts("creating mouse body");
+
+            /* create the mouse body */
             cpBody *mouse_body = cpBodyNewStatic();
-            state->constraint = cpPinJointNew(mouse_body, state->ball,
-                                              cpvzero, cpvzero);
+            cpBodySetPos(mouse_body, state->game->mouse_pos);
+
+            state->constraint = cpSlideJointNew(
+                    mouse_body, state->ball,
+                    cpvzero, cpvzero,
+                    0,
+                    cpvdist(cpBodyGetPos(mouse_body), cpBodyGetPos(state->ball)));
+            cpSpaceAddConstraint(state->space, state->constraint);
 
             state->mouse_body = mouse_body;
         }
@@ -51,6 +59,7 @@ handle_events(struct game_state *state)
     {
         if (!state->game->mouse_down)
         {
+            cpSpaceRemoveConstraint(state->space, state->constraint);
             debug_puts("freeing mouse body");
             cpConstraintFree(state->constraint);
             state->constraint = NULL;

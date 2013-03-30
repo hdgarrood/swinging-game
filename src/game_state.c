@@ -8,7 +8,7 @@ cpBody *ball= NULL;
 static cpSpace
 *create_space()
 {
-    cpVect gravity = cpv(0, 1);
+    cpVect gravity = cpv(0, 150);
 
     cpSpace *space = cpSpaceNew();
     cpSpaceSetGravity(space, gravity);
@@ -65,11 +65,11 @@ game_state_handle_events(struct game_state *state)
 void
 game_state_do_logic(struct game_state *state)
 {
-    cpFloat target_sec_per_frame = 1000.0 / state->game->target_fps;
+    cpFloat target_sec_per_frame = 1.0 / state->game->target_fps;
     debug_println("target sec per frame is %f", target_sec_per_frame);
 
-    cpVect pos = cpBodyGetPos(ball);
-    debug_println("ball is at (%f, %f)", pos.x, pos.y);
+    cpVect pos = cpBodyGetVel(ball);
+    debug_println("ball speed is (%f, %f)", pos.x, pos.y);
     cpSpaceStep(state->space, target_sec_per_frame);
 }
 

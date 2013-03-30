@@ -10,7 +10,6 @@
 
 struct game {
     bool quit_requested;
-    int target_fps;
     cpVect mouse_pos;
     bool mouse_down;
     struct game_state *state;

@@ -21,7 +21,6 @@ void
 init_game(struct game *game)
 {
     game->quit_requested = false;
-    game->target_fps = TARGET_FPS;
     game->state = make_rolling_ball_state();
 
     /* let the state know about its game */
@@ -71,7 +70,7 @@ game_main_loop(struct game *game)
         game_state_draw(game->state, screen);
         debug_puts("done drawing.");
 
-        cap_framerate(fps_timer, game->target_fps);
+        cap_framerate(fps_timer, TARGET_FPS);
     }
 
     free_timer(fps_timer);

@@ -39,9 +39,9 @@ int main()
     SDL_Init(SDL_INIT_EVERYTHING);
 
     struct game *game = make_game();
-    debug_println("%s", "entering main loop...");
+    debug_putsf("%s", "entering main loop...");
     game_main_loop(game);
-    debug_println("%s", "exiting main loop...");
+    debug_putsf("%s", "exiting main loop...");
 
     SDL_Quit();
 

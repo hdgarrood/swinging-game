@@ -7,10 +7,18 @@
 #define GAME_STATE_H
 
 struct game_state {
-    cpSpace *space;
+    /* members common to all game states */
     struct game *game;
-    cpVect mouse_pos;
-    bool mouse_down;
+    void (*handle_events)(struct game_state *);
+    void (*do_logic)(struct game_state *);
+    void (*draw)(struct game_state *, SDL_Surface *);
+    void (*free_state)(struct game_state *);
+
+    /* members specific to a certain state
+     * TODO: put these in a union or something
+     */
+    cpSpace *space;
+    cpBody *ball;
 };
 
 struct game_state *make_game_state();

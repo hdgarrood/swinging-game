@@ -4,6 +4,7 @@
 #include "timer.h"
 #include "game.h"
 #include "game_state.h"
+#include "rolling_ball_state.h"
 #include "utils.h"
 #include "constants.h"
 #include "macros.h"
@@ -19,9 +20,9 @@ struct game
 void
 init_game(struct game *game)
 {
-    game->quit = false;
-    game->target_fps = 60;
-    game->state = make_game_state();
+    game->quit_requested = false;
+    game->target_fps = TARGET_FPS;
+    game->state = make_rolling_ball_state();
 
     /* let the state know about its game */
     game->state->game = game;
@@ -35,6 +36,19 @@ free_game(struct game *game)
 }
 
 void
+game_get_input(struct game *game)
+{
+    int x, y;
+    Uint8 mouse_state = SDL_GetMouseState(&x, &y);
+
+    game->mouse_pos = cpv(x, y);
+    game->mouse_down = (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT));
+
+    if (SDL_QuitRequested())
+        game->quit_requested = true;
+}
+
+void
 game_main_loop(struct game *game)
 {
     SDL_Surface *screen = SDL_SetVideoMode(
@@ -42,18 +56,20 @@ game_main_loop(struct game *game)
 
     struct timer *fps_timer = make_timer();
 
-    while (!game->quit)
+    while (!game->quit_requested)
     {
-        debug_println("%s", "starting a loop");
+        debug_puts("starting a loop");
 
+        game_get_input(game);
+        debug_puts("got input.");
         game_state_handle_events(game->state);
-        debug_println("%s", "handled events.");
+        debug_puts("handled events.");
 
         game_state_do_logic(game->state);
-        debug_println("%s", "done logic.");
+        debug_puts("done logic.");
 
         game_state_draw(game->state, screen);
-        debug_println("%s", "done drawing.");
+        debug_puts("done drawing.");
 
         cap_framerate(fps_timer, game->target_fps);
     }

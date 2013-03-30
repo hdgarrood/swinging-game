@@ -1,3 +1,5 @@
+#include <SDL/SDL.h>
+
 #include "debug_draw.h"
 #include "game.h"
 #include "game_state.h"
@@ -60,6 +62,11 @@ free_game_state(struct game_state *state)
 void
 game_state_handle_events(struct game_state *state)
 {
+    /* retrieve mouse button state and mouse position */
+    /* state->mouse_state = SDL_GetMouseState(state->mouse_x, state->mouse_y); */
+
+    if (SDL_QuitRequested())
+        state->game->quit = true;
 }
 
 void

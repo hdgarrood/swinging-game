@@ -7,6 +7,9 @@
 struct game_state {
     cpSpace *space;
     struct game *game;
+    int *mouse_x;
+    int *mouse_y;
+    Uint8 mouse_state;
 };
 
 struct game_state *make_game_state();

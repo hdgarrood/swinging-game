@@ -3,6 +3,7 @@
 #include <chipmunk/chipmunk.h>
 
 #include "drawing.h"
+#include "macros.h"
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
@@ -63,12 +64,36 @@ draw_shape(cpShape* shape, SDL_Surface* screen)
             draw_segment_shape(opts, shape, body);
             break;
         default:
+			debug_putsf("ignoring unrecognised shape type %d",
+					shape->CP_PRIVATE(klass)->type);
             break;
     }
 }
 
 void
+draw_constraint(cpConstraint* constraint, SDL_Surface *screen)
+{
+    struct draw_options opts = {
+        .surface = screen,
+        .colour = (SDL_Colour){ 100, 100, 200 }
+    };
+
+	cpVect vect_a = cpBodyGetPos(cpConstraintGetA(constraint));
+	cpVect vect_b = cpBodyGetPos(cpConstraintGetB(constraint));
+	sdldraw_line(opts,
+                 vect_a.x,
+                 vect_a.y,
+                 vect_b.x,
+                 vect_b.y);
+}
+
+void
 debug_draw_space(cpSpace* space, SDL_Surface* screen)
 {
-	cpSpaceEachShape(space, (cpSpaceShapeIteratorFunc)draw_shape, screen);
+	cpSpaceEachShape(space,
+		(cpSpaceShapeIteratorFunc)draw_shape,
+		screen);
+	cpSpaceEachConstraint(space,
+		(cpSpaceConstraintIteratorFunc)draw_constraint,
+		screen);
 }

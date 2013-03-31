@@ -3,6 +3,7 @@
 #include <chipmunk/chipmunk.h>
 
 #include "drawing.h"
+#include "utils.h"
 #include "macros.h"
 
 extern const int SCREEN_WIDTH;
@@ -25,7 +26,7 @@ draw_background(SDL_Surface* screen)
 {
     struct draw_options opts = {
         .surface = screen,
-        .colour = (SDL_Colour){ 0, 0, 0 }
+        .colour = colour(0, 0, 0)
     };
 
     sdldraw_rect(opts, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -79,7 +80,7 @@ draw_shape(cpShape* shape, SDL_Surface* screen)
 	cpBody* body = shape->body;
     struct draw_options opts = {
         .surface = screen,
-        .colour = (SDL_Colour){ 200, 200, 200 }
+        .colour = colour(200, 200, 200)
     };
 
 	switch (shape->CP_PRIVATE(klass)->type)
@@ -105,7 +106,7 @@ draw_constraint(cpConstraint* constraint, SDL_Surface *screen)
 {
     struct draw_options opts = {
         .surface = screen,
-        .colour = (SDL_Colour){ 100, 100, 200 }
+        .colour = colour(100, 100, 200)
     };
 
 	cpVect vect_a = cpBodyGetPos(cpConstraintGetA(constraint));
@@ -118,11 +119,13 @@ draw_body(cpBody *body, SDL_Surface *screen)
 {
     struct draw_options opts = {
         .surface = screen,
-        .colour = (SDL_Colour){ 200, 100, 100 }
+        .colour = colour(200, 100, 100)
     };
 
+    cpFloat rotation_vector_length = 30;
     cpVect pos = cpBodyGetPos(body);
-    cpVect rotation = cpvmult(cpvforangle(cpBodyGetAngle(body)), 20);
+    cpVect rotation = cpvmult(cpvforangle(cpBodyGetAngle(body)),
+                              rotation_vector_length);
     draw_line(opts, pos, cpvadd(pos, rotation));
 }
 

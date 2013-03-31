@@ -1,5 +1,6 @@
 #include <stddef.h>
-#include <chipmunk/chipmunk.h>
+
+#include "utils.h"
 
 double
 array_average(int array[], size_t size)
@@ -16,4 +17,10 @@ cpFloat
 angle_between(cpVect a, cpVect b)
 {
     return cpvtoangle(cpvsub(b, a));
+}
+
+SDL_Colour
+colour(int r, int g, int b)
+{
+    return (SDL_Colour){ r, g, b };
 }

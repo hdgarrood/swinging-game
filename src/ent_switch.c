@@ -4,7 +4,7 @@
 #include "constants.h"
 #include "macros.h"
 
-struct ent_switch *make_switch(cpSpace *space, cpVect pos)
+struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
 {
 	cpVect left_verts[4];
 	left_verts[0] = cpv(0, 10);
@@ -26,6 +26,9 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos)
 	all_verts[4] = cpv(20, 0);
 	all_verts[5] = cpv(0, 10);
 
+    cpFloat switch_angle = 0.3;
+
+	/* create the switch body */
 	cpFloat mass = 10;
 	cpFloat moment = cpMomentForPoly(mass, 6, all_verts, cpvzero);
 
@@ -46,6 +49,18 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos)
 	cpShapeSetFriction(right_shape, 0.5);
 	cpShapeSetLayers(right_shape, L_SWITCH);
 
+	/* attach it to the space's static body */
+	cpConstraint *constraint = cpSpaceAddConstraint(space,
+			cpPivotJointNew(space->staticBody, body, pos));
+
+    /* add an angle constraint */
+    cpSpaceAddConstraint(space, cpRotaryLimitJointNew(
+                space->staticBody,
+                body,
+                ground_angle,
+                ground_angle + switch_angle));
+
+	/* create a struct and return it */
 	struct ent_switch *sw = malloc(sizeof(struct ent_switch));
 
 	sw->body = body;
@@ -54,4 +69,11 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos)
 	sw->space = space;
 
 	return sw;
+}
+
+void
+free_ent_switch(struct ent_switch *ent_switch)
+{
+	/* TODO */
+	free(ent_switch);
 }

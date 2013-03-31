@@ -73,16 +73,19 @@ handle_events(struct game_state *state)
 static cpSpace
 *create_space(struct game_state *state)
 {
-    cpVect gravity = cpv(0, 150);
+    cpVect gravity = cpv(0, 250);
 
     cpSpace *space = cpSpaceNew();
     cpSpaceSetGravity(space, gravity);
 
     // create the ground
-    cpShape *ground = cpSegmentShapeNew(space->staticBody,
-                                        cpv(0, 300),
-                                        cpv(640, 480),
-                                        0);
+    cpVect ground_left = cpv(0, 300);
+    cpVect ground_right = cpv(640, 480);
+    cpFloat ground_angle = cpvtoangle(cpvsub(ground_right, ground_left));
+
+    cpShape *ground = cpSegmentShapeNew(
+            space->staticBody, ground_left, ground_right, 0);
+
     cpShapeSetElasticity(ground, 1.0);
     cpShapeSetFriction(ground, 1);
     cpShapeSetLayers(ground, L_GROUND);
@@ -104,7 +107,7 @@ static cpSpace
     cpShapeSetLayers(ball_shape, L_PLAYER);
 
     // create a switch
-    make_switch(space, cpv(30, 50));
+    make_switch(space, cpv(200, 358), ground_angle);
 
     state->ball = ball;
     return space;

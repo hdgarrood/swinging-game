@@ -10,7 +10,7 @@ struct ent_switch {
 	cpShape *right_shape;
 };
 
-struct ent_switch *make_switch(cpSpace *, cpVect pos);
+struct ent_switch *make_switch(cpSpace *, cpVect pos, cpFloat ground_angle);
 void free_switch(struct ent_switch *);
 
 #endif

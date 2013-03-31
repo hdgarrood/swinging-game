@@ -22,10 +22,9 @@ typedef struct {
 /* switch state type */
 typedef struct {
     cpSpace *space;
-    cpBody *ball;
     ent_switch *sw;
+    bool mouse_down_last_step;
 } switch_state_data;
-
 
 /* generic game state type */
 typedef struct game_state {

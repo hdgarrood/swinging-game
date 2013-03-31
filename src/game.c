@@ -20,7 +20,7 @@ void
 init_game(game *game)
 {
     game->quit_requested = false;
-    game->state = rolling_ball_state_new();
+    game->state = switch_state_new();
 
     /* let the state know about its game */
     game->state->game = game;
@@ -90,9 +90,6 @@ game_main_loop(game *game)
  * On subsequent calls, if the time since the last call is less than the target
  * fps, this function will block until that amount of time has passed.
  * Otherwise it will return immediately.
- *
- * We assume that this will be in use for near 100% of the time the game is
- * running; therefore I'm not bothered that the fps timer is never freed.
  */
 void
 cap_framerate(timer *fps_timer, int target_fps)

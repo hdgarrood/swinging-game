@@ -1,25 +1,23 @@
+#pragma once
+
 #include <stdbool.h>
 #include <SDL/SDL.h>
 #include <chipmunk/chipmunk.h>
 
-#include "game_state.h"
 #include "timer.h"
 
-#ifndef GAME_H
-#define GAME_H
+typedef struct game_state game_state;
 
-struct game {
+typedef struct {
     bool quit_requested;
     cpVect mouse_pos;
     bool mouse_down;
-    struct game_state *state;
-};
+    game_state *state;
+} game;
 
-struct game *make_game();
-void init_game(struct game *);
-void free_game(struct game *);
-void game_main_loop(struct game *);
-void cap_framerate(struct timer *, int);
+game *make_game();
+void init_game(game *);
+void free_game(game *);
+void game_main_loop(game *);
+void cap_framerate(timer *, int);
 void display_fps(int);
-
-#endif

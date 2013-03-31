@@ -70,6 +70,8 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
 	/* create a struct and return it */
 	struct ent_switch *sw = malloc(sizeof(struct ent_switch));
 
+	debug_putsf("created an ent_switch at %p", sw);
+
 	sw->body = body;
 	sw->left_shape = left_shape;
 	sw->right_shape = right_shape;

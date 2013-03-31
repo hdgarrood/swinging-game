@@ -2,22 +2,22 @@
 
 #include "timer.h"
 
-struct timer*
-make_timer()
+timer*
+timer_new()
 {
-	struct timer *t = malloc(sizeof(struct timer));
+	timer *t = malloc(sizeof(timer));
 	timer_reset(t);
 	return t;
 }
 
 void
-free_timer(struct timer *t)
+timer_free(timer *t)
 {
 	free(t);
 }
 
 void
-timer_reset(struct timer *t)
+timer_reset(timer *t)
 {
 	t->started = false;
 	t->paused = false;
@@ -26,7 +26,7 @@ timer_reset(struct timer *t)
 }
 
 void
-timer_start(struct timer *t)
+timer_start(timer *t)
 {
 	if (t->started)
 		return;
@@ -36,7 +36,7 @@ timer_start(struct timer *t)
 }
 
 void
-timer_pause(struct timer *t)
+timer_pause(timer *t)
 {
 	if (t->paused || !t->started)
 		return;
@@ -46,7 +46,7 @@ timer_pause(struct timer *t)
 }
 
 void
-timer_unpause(struct timer *t)
+timer_unpause(timer *t)
 {
 	if (!t->paused)
 		return;
@@ -57,7 +57,7 @@ timer_unpause(struct timer *t)
 }
 
 int
-timer_get_ticks(struct timer *t)
+timer_get_ticks(timer *t)
 {
 	if (t->started)
 		return (SDL_GetTicks() - t->start_ticks);

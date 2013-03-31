@@ -3,19 +3,19 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-struct timer {
+typedef struct timer {
 	bool started;
 	bool paused;
 	int start_ticks;
 	int paused_ticks;
-};
+} timer;
 
-struct timer *make_timer();
-void free_timer(struct timer *t);
-void timer_reset(struct timer *t);
-void timer_start(struct timer *t);
-void timer_pause(struct timer *t);
-void timer_unpause(struct timer *t);
-int timer_get_ticks(struct timer *t);
+timer *timer_new();
+void timer_free(timer *t);
+void timer_reset(timer *t);
+void timer_start(timer *t);
+void timer_pause(timer *t);
+void timer_unpause(timer *t);
+int timer_get_ticks(timer *t);
 
 #endif

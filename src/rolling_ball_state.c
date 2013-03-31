@@ -8,34 +8,40 @@
 #include "constants.h"
 #include "macros.h"
 
-static cpSpace *create_space(struct game_state *state);
-static void handle_events(struct game_state *state);
-static void do_logic(struct game_state *state);
-static void draw(struct game_state *state, SDL_Surface *screen);
+static cpSpace *create_space(game_state *state);
+static void handle_events(game_state *state);
+static void do_logic(game_state *state);
+static void draw(game_state *state, SDL_Surface *screen);
 
-struct game_state
-*make_rolling_ball_state()
+game_state
+*rolling_ball_state_new()
 {
     debug_puts("making a rolling ball state");
-    struct game_state *state = make_game_state();
+    game_state *state = game_state_new();
 
     state->handle_events = &handle_events;
     state->do_logic = &do_logic;
     state->draw = &draw;
 
-    state->space = create_space(state);
-    state->constraint = NULL;
-    state->mouse_body = NULL;
+    rolling_ball_state_data *data = malloc(sizeof(rolling_ball_state_data));
+	state->data->rolling_ball = data;
+    data->space = create_space(state);
+	debug_putsf("made a space: %p", data->space);
+    data->constraint = NULL;
+    data->mouse_body = NULL;
+
+	debug_putsf("made a rolling ball state: %p", state);
 
     return state;
 }
 
 static void
-handle_events(struct game_state *state)
+handle_events(game_state *state)
 {
     debug_puts("inside handle_events");
+    rolling_ball_state_data *data = state->data->rolling_ball;
 
-    if (state->mouse_body == NULL)
+    if (data->mouse_body == NULL)
     {
         debug_puts("mouse body is NULL");
         if (state->game->mouse_down)
@@ -46,33 +52,34 @@ handle_events(struct game_state *state)
             cpBody *mouse_body = cpBodyNewStatic();
             cpBodySetPos(mouse_body, state->game->mouse_pos);
 
-            state->constraint = cpSlideJointNew(
-                    mouse_body, state->ball,
+            data->constraint = cpSlideJointNew(
+                    mouse_body, data->ball,
                     cpvzero, cpvzero,
                     0,
-                    cpvdist(cpBodyGetPos(mouse_body), cpBodyGetPos(state->ball)));
-            cpSpaceAddConstraint(state->space, state->constraint);
+                    cpvdist(cpBodyGetPos(mouse_body), cpBodyGetPos(data->ball)));
+            cpSpaceAddConstraint(data->space, data->constraint);
 
-            state->mouse_body = mouse_body;
+            data->mouse_body = mouse_body;
         }
     }
     else
     {
         if (!state->game->mouse_down)
         {
-            cpSpaceRemoveConstraint(state->space, state->constraint);
+            cpSpaceRemoveConstraint(data->space, data->constraint);
             debug_puts("freeing mouse body");
-            cpConstraintFree(state->constraint);
-            state->constraint = NULL;
-            cpBodyFree(state->mouse_body);
-            state->mouse_body = NULL;
+            cpConstraintFree(data->constraint);
+            data->constraint = NULL;
+            cpBodyFree(data->mouse_body);
+            data->mouse_body = NULL;
         }
     }
 }
 
 static cpSpace
-*create_space(struct game_state *state)
+*create_space(game_state *state)
 {
+    rolling_ball_state_data *data = state->data->rolling_ball;
     cpVect gravity = cpv(0, 250);
 
     cpSpace *space = cpSpaceNew();
@@ -109,30 +116,34 @@ static cpSpace
     // create a switch
     struct ent_switch *sw = make_switch(space, cpv(200, 358), ground_angle);
 
-    state->ball = ball;
-    state->ent_switch = sw;
+    data->ball = ball;
+    data->ent_switch = sw;
     return space;
 }
 
 static void
-do_logic(struct game_state *state)
+do_logic(game_state *state)
 {
+    rolling_ball_state_data *data = state->data->rolling_ball;
+
     debug_puts("doing logic");
-    cpVect pos = cpBodyGetVel(state->ball);
+    cpVect pos = cpBodyGetVel(data->ball);
     debug_putsf("ball speed is (%f, %f)", pos.x, pos.y);
 
     debug_putsf("switch angle is %f",
-            ent_switch_get_angle(state->ent_switch));
-    cpSpaceStep(state->space, TARGET_SEC_PER_FRAME);
+            ent_switch_get_angle(data->ent_switch));
+    cpSpaceStep(data->space, TARGET_SEC_PER_FRAME);
 }
 
 static void
-draw(struct game_state *state, SDL_Surface *screen)
+draw(game_state *state, SDL_Surface *screen)
 {
+    rolling_ball_state_data *data = state->data->rolling_ball;
+
     draw_background(screen);
 
     if (HAS_DEBUG)
-        debug_draw_space(state->space, screen);
+        debug_draw_space(data->space, screen);
 
     SDL_Flip(screen);
 }

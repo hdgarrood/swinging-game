@@ -5,23 +5,31 @@
 #include "game_state.h"
 #include "macros.h"
 
-struct game_state
-*make_game_state()
+game_state
+*game_state_new()
 {
-    struct game_state *state = malloc(sizeof(struct game_state));
-    state->free_state = NULL;
+    game_state *state = malloc(sizeof(game_state));
+
+	state->handle_events = NULL;
+	state->do_logic = NULL;
+	state->draw = NULL;
+    state->free = NULL;
+	state->data = malloc(sizeof(union state_data));
+
     return state;
 }
 
 void
-free_game_state(struct game_state *state)
+game_state_free(game_state *state)
 {
-    if (state->free_state != NULL)
-        state->free_state(state);
+    if (state->free != NULL)
+        state->free(state);
+	else
+		debug_putsf("state->free missing for %p", state);
 }
 
 void
-game_state_handle_events(struct game_state *state)
+game_state_handle_events(game_state *state)
 {
     debug_puts("about to handle events");
     state->handle_events(state);
@@ -29,13 +37,13 @@ game_state_handle_events(struct game_state *state)
 }
 
 void
-game_state_do_logic(struct game_state *state)
+game_state_do_logic(game_state *state)
 {
     state->do_logic(state);
 }
 
 void
-game_state_draw(struct game_state *state, SDL_Surface *screen)
+game_state_draw(game_state *state, SDL_Surface *screen)
 {
     state->draw(state, screen);
 }

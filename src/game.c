@@ -4,38 +4,37 @@
 #include "timer.h"
 #include "game.h"
 #include "game_state.h"
-#include "rolling_ball_state.h"
 #include "utils.h"
 #include "constants.h"
 #include "macros.h"
 
-struct game
+game
 *make_game()
 {
-    struct game *new_game = malloc(sizeof(struct game));
+    game *new_game = malloc(sizeof(game));
     init_game(new_game);
     return new_game;
 }
 
 void
-init_game(struct game *game)
+init_game(game *game)
 {
     game->quit_requested = false;
-    game->state = make_rolling_ball_state();
+    game->state = rolling_ball_state_new();
 
     /* let the state know about its game */
     game->state->game = game;
 }
 
 void
-free_game(struct game *game)
+free_game(game *game)
 {
-    free_game_state(game->state);
+    game_state_free(game->state);
     free(game);
 }
 
 void
-game_get_input(struct game *game)
+game_get_input(game *game)
 {
     int x, y;
     Uint8 mouse_state = SDL_GetMouseState(&x, &y);
@@ -54,12 +53,12 @@ game_get_input(struct game *game)
 }
 
 void
-game_main_loop(struct game *game)
+game_main_loop(game *game)
 {
     SDL_Surface *screen = SDL_SetVideoMode(
             SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
 
-    struct timer *fps_timer = make_timer();
+    timer *fps_timer = timer_new();
 
     while (!game->quit_requested)
     {
@@ -79,7 +78,7 @@ game_main_loop(struct game *game)
         cap_framerate(fps_timer, TARGET_FPS);
     }
 
-    free_timer(fps_timer);
+    timer_free(fps_timer);
     SDL_FreeSurface(screen);
 }
 
@@ -96,7 +95,7 @@ game_main_loop(struct game *game)
  * running; therefore I'm not bothered that the fps timer is never freed.
  */
 void
-cap_framerate(struct timer *fps_timer, int target_fps)
+cap_framerate(timer *fps_timer, int target_fps)
 {
     if (!fps_timer->started)
     {

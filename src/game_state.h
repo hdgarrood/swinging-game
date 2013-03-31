@@ -1,33 +1,49 @@
-#include <stdbool.h>
+#pragma once
 
+#include <stdbool.h>
 #include <SDL/SDL.h>
 #include <chipmunk/chipmunk.h>
+#include "game.h"
 
-#ifndef GAME_STATE_H
-#define GAME_STATE_H
+typedef enum {
+    ROLLING_BALL_STATE,
+} e_state_type;
 
-struct game_state {
-    /* members common to all game states */
-    struct game *game;
-    void (*handle_events)(struct game_state *);
-    void (*do_logic)(struct game_state *);
-    void (*draw)(struct game_state *, SDL_Surface *);
-    void (*free_state)(struct game_state *);
-
-    /* members specific to a certain state
-     * TODO: put these in a union or something
-     */
+/* rolling ball state type */
+typedef struct {
     cpSpace *space;
     cpBody *ball;
     cpBody *mouse_body;
     cpConstraint *constraint;
     struct ent_switch *ent_switch;
-};
+} rolling_ball_state_data;
 
-struct game_state *make_game_state();
-void free_game_state(struct game_state *state);
-void game_state_handle_events(struct game_state *state);
-void game_state_do_logic(struct game_state *state);
-void game_state_draw(struct game_state *state, SDL_Surface *screen);
+/* generic game state type */
+typedef struct game_state {
+    void (*handle_events)(game_state *);
+    void (*do_logic)(game_state *);
+    void (*draw)(game_state *, SDL_Surface *);
+    void (*free)(game_state *);
 
-#endif
+    /* the game which this game_state belongs to */
+    game *game;
+
+    /* the type of state */
+    e_state_type type;
+
+    /* anything specific to a certain state goes here */
+    union state_data {
+        rolling_ball_state_data *rolling_ball;
+    } *data;
+} game_state;
+
+/* rolling ball state functions */
+game_state *rolling_ball_state_new();
+void rolling_ball_state_free(game_state *);
+
+/* generic game state functions */
+game_state *game_state_new();
+void game_state_handle_events(game_state *);
+void game_state_do_logic(game_state *);
+void game_state_draw(game_state *, SDL_Surface *);
+void game_state_free(game_state *);

@@ -8,6 +8,18 @@
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 
+static void
+draw_circle(struct draw_options opts, cpVect centre, cpFloat radius)
+{
+    sdldraw_circle(opts, centre.x, centre.y, radius);
+}
+
+static void
+draw_line(struct draw_options opts, cpVect v1, cpVect v2)
+{
+    sdldraw_line(opts, v1.x, v1.y, v2.x, v2.y);
+}
+
 void
 draw_background(SDL_Surface* screen)
 {
@@ -29,8 +41,8 @@ draw_circle_shape(struct draw_options opts, cpShape* shape, cpBody* body)
     cpVect edgePoint = cpvadd(centre,
                               cpv(radius * cos(angle), radius * sin(angle)));
 
-    sdldraw_circle(opts, centre.x, centre.y, radius);
-    sdldraw_line(opts, centre.x, centre.y, edgePoint.x, edgePoint.y);
+    draw_circle(opts, centre, radius);
+    draw_line(opts, centre, edgePoint);
 }
 
 static void
@@ -39,11 +51,7 @@ draw_segment_shape(struct draw_options opts, cpShape* shape, cpBody* body)
     cpVect vect_a = cpSegmentShapeGetA(shape);
     cpVect vect_b = cpSegmentShapeGetB(shape);
 
-    sdldraw_line(opts,
-                 vect_a.x,
-                 vect_a.y,
-                 vect_b.x,
-                 vect_b.y);
+    draw_line(opts, vect_a, vect_b);
 }
 
 static void
@@ -57,15 +65,15 @@ draw_poly_shape(struct draw_options opts, cpShape *shape, cpBody *body)
 	for (int i = 1; i < num_verts; i++)
 	{
 		cpVect vert = cpBodyLocal2World(body, cpPolyShapeGetVert(shape, i));
-		sdldraw_line(opts, prev_vert.x, prev_vert.y, vert.x, vert.y);
+		draw_line(opts, prev_vert, vert);
 		prev_vert = vert;
 	}
 
 	/* close up the polygon */
-	sdldraw_line(opts, prev_vert.x, prev_vert.y, first_vert.x, first_vert.y);
+	draw_line(opts, prev_vert, first_vert);
 }
 
-void
+static void
 draw_shape(cpShape* shape, SDL_Surface* screen)
 {
 	cpBody* body = shape->body;
@@ -92,7 +100,7 @@ draw_shape(cpShape* shape, SDL_Surface* screen)
     }
 }
 
-void
+static void
 draw_constraint(cpConstraint* constraint, SDL_Surface *screen)
 {
     struct draw_options opts = {
@@ -102,11 +110,20 @@ draw_constraint(cpConstraint* constraint, SDL_Surface *screen)
 
 	cpVect vect_a = cpBodyGetPos(cpConstraintGetA(constraint));
 	cpVect vect_b = cpBodyGetPos(cpConstraintGetB(constraint));
-	sdldraw_line(opts,
-                 vect_a.x,
-                 vect_a.y,
-                 vect_b.x,
-                 vect_b.y);
+	draw_line(opts, vect_a, vect_b);
+}
+
+static void
+draw_body(cpBody *body, SDL_Surface *screen)
+{
+    struct draw_options opts = {
+        .surface = screen,
+        .colour = (SDL_Colour){ 200, 100, 100 }
+    };
+
+    cpVect pos = cpBodyGetPos(body);
+    cpVect rotation = cpvmult(cpvforangle(cpBodyGetAngle(body)), 20);
+    draw_line(opts, pos, cpvadd(pos, rotation));
 }
 
 void
@@ -118,4 +135,7 @@ debug_draw_space(cpSpace* space, SDL_Surface* screen)
 	cpSpaceEachConstraint(space,
 		(cpSpaceConstraintIteratorFunc)draw_constraint,
 		screen);
+    cpSpaceEachBody(space,
+        (cpSpaceBodyIteratorFunc)draw_body,
+        screen);
 }

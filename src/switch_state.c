@@ -114,6 +114,11 @@ do_logic(game_state *state)
 
     cpSpaceStep(data->space, TARGET_SEC_PER_FRAME);
     data->mouse_down_last_step = state->game->mouse_down;
+
+    if (ent_switch_get_state(data->sw))
+        debug_puts("switch is on");
+    else
+        debug_puts("switch is off");
 }
 
 static void

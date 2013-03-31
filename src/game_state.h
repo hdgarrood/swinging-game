@@ -50,6 +50,9 @@ typedef struct game_state {
 game_state *rolling_ball_state_new();
 void rolling_ball_state_free(game_state *);
 
+/* switch state functions */
+game_state *switch_state_new();
+
 /* generic game state functions */
 game_state *game_state_new();
 void game_state_handle_events(game_state *);

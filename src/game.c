@@ -20,6 +20,7 @@ void
 init_game(game *game)
 {
     game->quit_requested = false;
+    game->mouse_down = false;
     game->state = switch_state_new();
 
     /* let the state know about its game */

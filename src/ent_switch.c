@@ -1,5 +1,5 @@
+#include <stdbool.h>
 #include <chipmunk/chipmunk.h>
-
 #include "ent_switch.h"
 #include "constants.h"
 #include "macros.h"
@@ -79,6 +79,7 @@ ent_switch
 	sw->space = space;
     sw->pivot_constraint = pivot_constraint;
     sw->rotary_constraint = rotary_constraint;
+    sw->ground_angle = ground_angle;
 
 	return sw;
 }
@@ -100,8 +101,8 @@ free_ent_switch(ent_switch *sw)
 	free(sw);
 }
 
-cpFloat
-ent_switch_get_angle(ent_switch *sw)
+bool
+ent_switch_get_state(ent_switch *sw)
 {
-    return cpBodyGetAngle(sw->body);
+    return (cpBodyGetAngle(sw->body) > sw->ground_angle);
 }

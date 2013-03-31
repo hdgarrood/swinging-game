@@ -81,10 +81,20 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
 }
 
 void
-free_ent_switch(struct ent_switch *ent_switch)
+free_ent_switch(struct ent_switch *sw)
 {
-	/* TODO */
-	free(ent_switch);
+    cpSpaceRemoveConstraint(sw->space, sw->rotary_constraint);
+    cpSpaceRemoveConstraint(sw->space, sw->pivot_constraint);
+    cpSpaceRemoveShape(sw->space, sw->left_shape);
+    cpSpaceRemoveShape(sw->space, sw->right_shape);
+    cpSpaceRemoveBody(sw->space, sw->body);
+
+    cpConstraintFree(sw->rotary_constraint);
+    cpConstraintFree(sw->pivot_constraint);
+    cpShapeFree(sw->left_shape);
+    cpShapeFree(sw->right_shape);
+    cpBodyFree(sw->body);
+	free(sw);
 }
 
 cpFloat

@@ -27,9 +27,7 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
 	all_verts[4] = cpv(20, 0);
 	all_verts[5] = cpv(0, 10);
 
-    cpFloat switch_angle = PI -
-                           (angle_between(all_verts[1], all_verts[2])
-                            + angle_between(all_verts[2], all_verts[3]));
+    cpFloat half_switch_angle = angle_between(all_verts[1], all_verts[2]);
 
 	/* create the switch body */
 	cpFloat mass = 1;
@@ -37,6 +35,7 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
 
 	cpBody *body = cpSpaceAddBody(space, cpBodyNew(mass, moment));
 	cpBodySetPos(body, pos);
+    cpBodySetAngle(body, ground_angle);
 
 	debug_puts("about to create left shape");
 	cpShape *left_shape = cpSpaceAddShape(space,
@@ -61,11 +60,12 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
             cpRotaryLimitJointNew(
                 space->staticBody,
                 body,
-                ground_angle,
-                ground_angle + switch_angle));
+                ground_angle - half_switch_angle,
+                ground_angle + half_switch_angle));
 
+    debug_putsf("half_switch_angle is %f", half_switch_angle);
     debug_putsf("setting angles: min: %f, max: %f",
-            ground_angle, ground_angle + switch_angle);
+            ground_angle - half_switch_angle, ground_angle + half_switch_angle);
 
 	/* create a struct and return it */
 	struct ent_switch *sw = malloc(sizeof(struct ent_switch));

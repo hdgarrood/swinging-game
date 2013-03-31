@@ -17,8 +17,15 @@ typedef struct {
     cpBody *ball;
     cpBody *mouse_body;
     cpConstraint *constraint;
-    ent_switch *ent_switch;
 } rolling_ball_state_data;
+
+/* switch state type */
+typedef struct {
+    cpSpace *space;
+    cpBody *ball;
+    ent_switch *sw;
+} switch_state_data;
+
 
 /* generic game state type */
 typedef struct game_state {
@@ -35,7 +42,8 @@ typedef struct game_state {
 
     /* anything specific to a certain state goes here */
     union state_data {
-        rolling_ball_state_data *rolling_ball;
+        rolling_ball_state_data *rolling_ball_data;
+        switch_state_data *switch_data;
     } *data;
 } game_state;
 

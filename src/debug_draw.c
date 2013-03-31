@@ -115,7 +115,7 @@ draw_constraint(cpConstraint* constraint, SDL_Surface *screen)
 }
 
 static void
-draw_body(cpBody *body, SDL_Surface *screen)
+draw_rotation_vector(cpBody *body, SDL_Surface *screen)
 {
     struct draw_options opts = {
         .surface = screen,
@@ -127,6 +127,26 @@ draw_body(cpBody *body, SDL_Surface *screen)
     cpVect rotation = cpvmult(cpvforangle(cpBodyGetAngle(body)),
                               rotation_vector_length);
     draw_line(opts, pos, cpvadd(pos, rotation));
+}
+
+static void
+draw_forces(cpBody *body, SDL_Surface *screen)
+{
+    struct draw_options opts = {
+        .surface = screen,
+        .colour = colour(100, 200, 100)
+    };
+
+    cpVect pos = cpBodyGetPos(body);
+    cpVect force = cpBodyGetForce(body);
+    draw_line(opts, pos, cpvadd(pos, force));
+}
+
+static void
+draw_body(cpBody *body, SDL_Surface *screen)
+{
+    draw_rotation_vector(body, screen);
+    draw_forces(body, screen);
 }
 
 void

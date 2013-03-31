@@ -3,10 +3,10 @@
 
 #include "game.h"
 #include "game_state.h"
-#include "ent_switch.h"
 #include "debug_draw.h"
 #include "constants.h"
 #include "macros.h"
+#include "utils.h"
 
 static cpSpace *create_space(game_state *state);
 static void handle_events(game_state *state);
@@ -24,7 +24,7 @@ game_state
     state->draw = &draw;
 
     rolling_ball_state_data *data = malloc(sizeof(rolling_ball_state_data));
-	state->data->rolling_ball = data;
+	state->data->rolling_ball_data = data;
     data->space = create_space(state);
 	debug_putsf("made a space: %p", data->space);
     data->constraint = NULL;
@@ -39,7 +39,9 @@ static void
 handle_events(game_state *state)
 {
     debug_puts("inside handle_events");
-    rolling_ball_state_data *data = state->data->rolling_ball;
+    rolling_ball_state_data *data = state->data->rolling_ball_data;
+
+    cpBodyResetForces(data->ball);
 
     if (data->mouse_body == NULL)
     {
@@ -52,24 +54,33 @@ handle_events(game_state *state)
             cpBody *mouse_body = cpBodyNewStatic();
             cpBodySetPos(mouse_body, state->game->mouse_pos);
 
-            data->constraint = cpSlideJointNew(
-                    mouse_body, data->ball,
-                    cpvzero, cpvzero,
-                    0,
-                    cpvdist(cpBodyGetPos(mouse_body), cpBodyGetPos(data->ball)));
-            cpSpaceAddConstraint(data->space, data->constraint);
+            /* data->constraint = cpSlideJointNew( */
+            /*         mouse_body, data->ball, */
+            /*         cpvzero, cpvzero, */
+            /*         0, */
+            /*         cpvdist(cpBodyGetPos(mouse_body), cpBodyGetPos(data->ball))); */
+            /* cpSpaceAddConstraint(data->space, data->constraint); */
 
             data->mouse_body = mouse_body;
         }
     }
     else
     {
-        if (!state->game->mouse_down)
+        if (state->game->mouse_down)
         {
-            cpSpaceRemoveConstraint(data->space, data->constraint);
-            debug_puts("freeing mouse body");
-            cpConstraintFree(data->constraint);
-            data->constraint = NULL;
+            /* move towards the pivot */
+            cpFloat direction = angle_between(cpBodyGetPos(data->ball),
+                                              cpBodyGetPos(data->mouse_body));
+            cpFloat magnitude = 3500;
+            cpVect force = cpvmult(cpvforangle(direction), magnitude);
+            cpBodyApplyForce(data->ball, force, cpvzero);
+        }
+        else
+        {
+            /* cpSpaceRemoveConstraint(data->space, data->constraint); */
+            /* debug_puts("freeing mouse body"); */
+            /* cpConstraintFree(data->constraint); */
+            /* data->constraint = NULL; */
             cpBodyFree(data->mouse_body);
             data->mouse_body = NULL;
         }
@@ -79,7 +90,7 @@ handle_events(game_state *state)
 static cpSpace
 *create_space(game_state *state)
 {
-    rolling_ball_state_data *data = state->data->rolling_ball;
+    rolling_ball_state_data *data = state->data->rolling_ball_data;
     cpVect gravity = cpv(0, 250);
 
     cpSpace *space = cpSpaceNew();
@@ -113,32 +124,26 @@ static cpSpace
     cpShapeSetFriction(ball_shape, 0.7);
     cpShapeSetLayers(ball_shape, L_PLAYER);
 
-    // create a switch
-    ent_switch *sw = ent_switch_new(space, cpv(200, 358), ground_angle);
-
     data->ball = ball;
-    data->ent_switch = sw;
     return space;
 }
 
 static void
 do_logic(game_state *state)
 {
-    rolling_ball_state_data *data = state->data->rolling_ball;
+    rolling_ball_state_data *data = state->data->rolling_ball_data;
 
     debug_puts("doing logic");
     cpVect pos = cpBodyGetVel(data->ball);
     debug_putsf("ball speed is (%f, %f)", pos.x, pos.y);
 
-    debug_putsf("switch angle is %f",
-            ent_switch_get_angle(data->ent_switch));
     cpSpaceStep(data->space, TARGET_SEC_PER_FRAME);
 }
 
 static void
 draw(game_state *state, SDL_Surface *screen)
 {
-    rolling_ball_state_data *data = state->data->rolling_ball;
+    rolling_ball_state_data *data = state->data->rolling_ball_data;
 
     draw_background(screen);
 

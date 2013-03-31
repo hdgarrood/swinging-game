@@ -1,7 +1,7 @@
-#include <SDL/SDL.h>
+#ifndef DRAWING_H_H3STOXSN
+#define DRAWING_H_H3STOXSN
 
-#ifndef DRAWING_H
-#define DRAWING_H
+#include <SDL/SDL.h>
 
 struct draw_options {
     SDL_Surface* surface;
@@ -12,4 +12,4 @@ void sdldraw_rect(struct draw_options, int, int, int, int);
 void sdldraw_line(struct draw_options, int, int, int, int);
 void sdldraw_circle(struct draw_options, int, int, int);
 
-#endif
+#endif /* end of include guard: DRAWING_H_H3STOXSN */

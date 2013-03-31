@@ -1,7 +1,7 @@
-#include <stdbool.h>
+#ifndef TIMER_H_XEC50VDN
+#define TIMER_H_XEC50VDN
 
-#ifndef TIMER_H
-#define TIMER_H
+#include <stdbool.h>
 
 typedef struct timer {
 	bool started;
@@ -18,4 +18,4 @@ void timer_pause(timer *t);
 void timer_unpause(timer *t);
 int timer_get_ticks(timer *t);
 
-#endif
+#endif /* end of include guard: TIMER_H_XEC50VDN */

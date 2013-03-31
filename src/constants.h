@@ -1,7 +1,7 @@
-#include <chipmunk/chipmunk.h>
+#ifndef CONSTANTS_H_DG2LIKXS
+#define CONSTANTS_H_DG2LIKXS
 
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#include <chipmunk/chipmunk.h>
 
 extern const cpFloat PI;
 
@@ -17,4 +17,4 @@ extern const cpLayers L_GROUND;
 extern const cpLayers L_SWITCH;
 extern const cpLayers L_PLAYER;
 
-#endif
+#endif /* end of include guard: CONSTANTS_H_DG2LIKXS */

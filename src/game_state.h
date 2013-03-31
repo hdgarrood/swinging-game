@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAME_STATE_H_SEAIAXNJ
+#define GAME_STATE_H_SEAIAXNJ
 
 #include <stdbool.h>
 #include <SDL/SDL.h>
@@ -48,3 +49,5 @@ void game_state_handle_events(game_state *);
 void game_state_do_logic(game_state *);
 void game_state_draw(game_state *, SDL_Surface *);
 void game_state_free(game_state *);
+
+#endif /* end of include guard: GAME_STATE_H_SEAIAXNJ */

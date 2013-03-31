@@ -4,6 +4,7 @@
 #include <SDL/SDL.h>
 #include <chipmunk/chipmunk.h>
 #include "game.h"
+#include "ent_switch.h"
 
 typedef enum {
     ROLLING_BALL_STATE,
@@ -15,7 +16,7 @@ typedef struct {
     cpBody *ball;
     cpBody *mouse_body;
     cpConstraint *constraint;
-    struct ent_switch *ent_switch;
+    ent_switch *ent_switch;
 } rolling_ball_state_data;
 
 /* generic game state type */

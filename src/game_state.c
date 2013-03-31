@@ -25,7 +25,7 @@ game_state_free(game_state *state)
     if (state->free != NULL)
         state->free(state);
 	else
-		debug_putsf("state->free missing for %p", state);
+		debug_putsf("WARNING: state->free missing for %p", state);
 }
 
 void

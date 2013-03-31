@@ -114,7 +114,7 @@ static cpSpace
     cpShapeSetLayers(ball_shape, L_PLAYER);
 
     // create a switch
-    struct ent_switch *sw = make_switch(space, cpv(200, 358), ground_angle);
+    ent_switch *sw = ent_switch_new(space, cpv(200, 358), ground_angle);
 
     data->ball = ball;
     data->ent_switch = sw;

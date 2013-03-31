@@ -5,7 +5,8 @@
 #include "macros.h"
 #include "utils.h"
 
-struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
+ent_switch
+*ent_switch_new(cpSpace *space, cpVect pos, cpFloat ground_angle)
 {
 	cpVect left_verts[4];
 	left_verts[0] = cpv(0, 10);
@@ -68,7 +69,7 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
             ground_angle - half_switch_angle, ground_angle + half_switch_angle);
 
 	/* create a struct and return it */
-	struct ent_switch *sw = malloc(sizeof(struct ent_switch));
+	ent_switch *sw = malloc(sizeof(ent_switch));
 
 	debug_putsf("created an ent_switch at %p", sw);
 
@@ -83,7 +84,7 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
 }
 
 void
-free_ent_switch(struct ent_switch *sw)
+free_ent_switch(ent_switch *sw)
 {
     cpSpaceRemoveConstraint(sw->space, sw->rotary_constraint);
     cpSpaceRemoveConstraint(sw->space, sw->pivot_constraint);
@@ -100,7 +101,7 @@ free_ent_switch(struct ent_switch *sw)
 }
 
 cpFloat
-ent_switch_get_angle(struct ent_switch *sw)
+ent_switch_get_angle(ent_switch *sw)
 {
     return cpBodyGetAngle(sw->body);
 }

@@ -9,13 +9,15 @@ struct game_state
 *make_game_state()
 {
     struct game_state *state = malloc(sizeof(struct game_state));
+    state->free_state = NULL;
     return state;
 }
 
 void
 free_game_state(struct game_state *state)
 {
-    state->free_state(state);
+    if (state->free_state != NULL)
+        state->free_state(state);
 }
 
 void

@@ -42,6 +42,7 @@ int main()
     debug_putsf("%s", "entering main loop...");
     game_main_loop(game);
     debug_putsf("%s", "exiting main loop...");
+    free_game(game);
 
     SDL_Quit();
 

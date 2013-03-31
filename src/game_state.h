@@ -21,6 +21,7 @@ struct game_state {
     cpBody *ball;
     cpBody *mouse_body;
     cpConstraint *constraint;
+    struct ent_switch *ent_switch;
 };
 
 struct game_state *make_game_state();

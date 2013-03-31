@@ -8,9 +8,12 @@ struct ent_switch {
 	cpBody *body;
 	cpShape *left_shape;
 	cpShape *right_shape;
+    cpConstraint *pivot_constraint;
+    cpConstraint *rotary_constraint;
 };
 
 struct ent_switch *make_switch(cpSpace *, cpVect pos, cpFloat ground_angle);
 void free_switch(struct ent_switch *);
+cpFloat ent_switch_get_angle(struct ent_switch *);
 
 #endif

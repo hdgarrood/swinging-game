@@ -107,9 +107,10 @@ static cpSpace
     cpShapeSetLayers(ball_shape, L_PLAYER);
 
     // create a switch
-    make_switch(space, cpv(200, 358), ground_angle);
+    struct ent_switch *sw = make_switch(space, cpv(200, 358), ground_angle);
 
     state->ball = ball;
+    state->ent_switch = sw;
     return space;
 }
 
@@ -119,6 +120,9 @@ do_logic(struct game_state *state)
     debug_puts("doing logic");
     cpVect pos = cpBodyGetVel(state->ball);
     debug_putsf("ball speed is (%f, %f)", pos.x, pos.y);
+
+    debug_putsf("switch angle is %f",
+            ent_switch_get_angle(state->ent_switch));
     cpSpaceStep(state->space, TARGET_SEC_PER_FRAME);
 }
 

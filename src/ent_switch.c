@@ -3,6 +3,7 @@
 #include "ent_switch.h"
 #include "constants.h"
 #include "macros.h"
+#include "utils.h"
 
 struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
 {
@@ -26,10 +27,12 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
 	all_verts[4] = cpv(20, 0);
 	all_verts[5] = cpv(0, 10);
 
-    cpFloat switch_angle = 0.3;
+    cpFloat switch_angle = PI -
+                           (angle_between(all_verts[1], all_verts[2])
+                            + angle_between(all_verts[2], all_verts[3]));
 
 	/* create the switch body */
-	cpFloat mass = 10;
+	cpFloat mass = 1;
 	cpFloat moment = cpMomentForPoly(mass, 6, all_verts, cpvzero);
 
 	cpBody *body = cpSpaceAddBody(space, cpBodyNew(mass, moment));
@@ -50,15 +53,19 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
 	cpShapeSetLayers(right_shape, L_SWITCH);
 
 	/* attach it to the space's static body */
-	cpConstraint *constraint = cpSpaceAddConstraint(space,
+	cpConstraint *pivot_constraint = cpSpaceAddConstraint(space,
 			cpPivotJointNew(space->staticBody, body, pos));
 
     /* add an angle constraint */
-    cpSpaceAddConstraint(space, cpRotaryLimitJointNew(
+    cpConstraint *rotary_constraint = cpSpaceAddConstraint(space,
+            cpRotaryLimitJointNew(
                 space->staticBody,
                 body,
                 ground_angle,
                 ground_angle + switch_angle));
+
+    debug_putsf("setting angles: min: %f, max: %f",
+            ground_angle, ground_angle + switch_angle);
 
 	/* create a struct and return it */
 	struct ent_switch *sw = malloc(sizeof(struct ent_switch));
@@ -67,6 +74,8 @@ struct ent_switch *make_switch(cpSpace *space, cpVect pos, cpFloat ground_angle)
 	sw->left_shape = left_shape;
 	sw->right_shape = right_shape;
 	sw->space = space;
+    sw->pivot_constraint = pivot_constraint;
+    sw->rotary_constraint = rotary_constraint;
 
 	return sw;
 }
@@ -76,4 +85,10 @@ free_ent_switch(struct ent_switch *ent_switch)
 {
 	/* TODO */
 	free(ent_switch);
+}
+
+cpFloat
+ent_switch_get_angle(struct ent_switch *sw)
+{
+    return cpBodyGetAngle(sw->body);
 }

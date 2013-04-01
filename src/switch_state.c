@@ -78,7 +78,7 @@ create_physics_objects(game_state *state)
     cpShapeSetLayers(shape, L_GROUND);
 
     ent_switch *sw = ent_switch_new(space,
-        cpv(SCREEN_WIDTH / 2, SCREEN_HEIGHT), 0);
+        cpv(SCREEN_WIDTH / 2, SCREEN_HEIGHT + 2), 0);
 
     data->space = space;
     data->sw = sw;

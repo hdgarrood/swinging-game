@@ -4,10 +4,10 @@
 #include <chipmunk/chipmunk.h>
 
 typedef struct {
-	cpSpace *space;
-	cpBody *body;
-	cpShape *left_shape;
-	cpShape *right_shape;
+    cpSpace *space;
+    cpBody *body;
+    cpShape *left_shape;
+    cpShape *right_shape;
     cpConstraint *pivot_constraint;
     cpConstraint *rotary_constraint;
 

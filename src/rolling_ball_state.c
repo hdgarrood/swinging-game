@@ -24,13 +24,13 @@ game_state
     state->draw = &draw;
 
     rolling_ball_state_data *data = malloc(sizeof(rolling_ball_state_data));
-	state->data->rolling_ball_data = data;
+    state->data->rolling_ball_data = data;
     data->space = create_space(state);
-	debug_putsf("made a space: %p", data->space);
+    debug_putsf("made a space: %p", data->space);
     data->constraint = NULL;
     data->mouse_body = NULL;
 
-	debug_putsf("made a rolling ball state: %p", state);
+    debug_putsf("made a rolling ball state: %p", state);
 
     return state;
 }

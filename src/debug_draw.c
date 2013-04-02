@@ -62,7 +62,7 @@ draw_poly_shape(struct draw_options opts, cpShape *shape, cpBody *body)
 	cpVect first_vert = cpBodyLocal2World(body, cpPolyShapeGetVert(shape, 0));
 	cpVect prev_vert = first_vert;
 	cpVect pos = cpBodyGetPos(body);
-	
+
 	for (int i = 1; i < num_verts; i++)
 	{
 		cpVect vert = cpBodyLocal2World(body, cpPolyShapeGetVert(shape, i));

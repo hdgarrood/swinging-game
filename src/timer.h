@@ -4,10 +4,10 @@
 #include <stdbool.h>
 
 typedef struct timer {
-	bool started;
-	bool paused;
-	int start_ticks;
-	int paused_ticks;
+    bool started;
+    bool paused;
+    int start_ticks;
+    int paused_ticks;
 } timer;
 
 timer *timer_new();

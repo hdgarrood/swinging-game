@@ -10,11 +10,11 @@ game_state
 {
     game_state *state = malloc(sizeof(game_state));
 
-	state->handle_events = NULL;
-	state->do_logic = NULL;
-	state->draw = NULL;
+    state->handle_events = NULL;
+    state->do_logic = NULL;
+    state->draw = NULL;
     state->free = NULL;
-	state->data = malloc(sizeof(union state_data));
+    state->data = malloc(sizeof(union state_data));
 
     return state;
 }
@@ -24,8 +24,8 @@ game_state_free(game_state *state)
 {
     if (state->free != NULL)
         state->free(state);
-	else
-		debug_putsf("WARNING: state->free missing for %p", state);
+    else
+        debug_putsf("WARNING: state->free missing for %p", state);
 }
 
 void
